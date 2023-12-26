@@ -1,9 +1,31 @@
 <template>
+  <Modal ref="createGroupModal">
+    <template v-slot:modalTitle>
+      新增群組
+    </template>
+    <template v-slot:modalBody>
+      <MemberGroupForm @confirmForm="createGroup"></MemberGroupForm>
+    </template>
+  </Modal>
+  <Modal ref="editGroupModal">
+    <template v-slot:modalTitle>
+      編輯群組
+    </template>
+    <template v-slot:modalBody>
+      <MemberGroupForm
+      :chosen-group-detail="chosenGroupDetail"
+      @confirmForm="editGroup">
+      </MemberGroupForm>
+    </template>
+  </Modal>
   <Layout>
     <template v-slot:content>
       <div class="main">
         <div class="search">
-          <a class="btn btn-primary float-right" href="user_create.html"><i class="iconfont">&#xe665;</i>新增</a>
+          <!-- Button trigger modal -->
+          <button type="button" class="btn btn-primary ml-1" @click.prevent="createGroupModal.modalOpen()">
+            <i class="iconfont">&#xe665;</i>新增
+          </button>
         </div>
 
         <div class="table-box">
@@ -36,10 +58,10 @@
                   {{ group.point_baseline }}
                 </td>
                 <td class="flex gap-2">
-                  <button class="btn btn-primary">
+                  <button class="btn btn-primary" @click.prevent="editButtonClick(group)">
                     編輯
                   </button>
-                  <button class="btn btn-danger">
+                  <button class="btn btn-danger" @click.prevent="removeGroup(group.id)">
                     刪除
                   </button>
                 </td>
@@ -64,16 +86,22 @@
 </template>
 
 <script setup>
+import { ref, reactive } from 'vue'
 import Layout from '../../components/admin/Layout.vue'
+import MemberGroupForm from '../../components/admin/form/MemberGroupForm.vue'
+import Modal from '@/components/admin/Modal.vue'
 import fetchWithToken from '@utils/fetchFn'
 // import alertResult from '@utils/alertResult'
 
 const memberGroups = ref([])
-// const groupDetail = reactive({
-//   name: '',
-//   pointBaseLine: 0,
-//   isDefault: false,
-// })
+const createGroupModal= ref(null)
+const editGroupModal = ref(null)
+const chosenGroupDetail = reactive({
+  id: 0,
+  name: '',
+  point_baseline: 0,
+  isDefault: false,
+})
 
 const fetchMemberGroup = async () => {
   const { data, error } = await fetchWithToken('/api/groups?fields[0]=name&fields[1]=isDefault&fields[2]=point_baseline&populate[users][count]=1')
@@ -90,50 +118,63 @@ const fetchMemberGroup = async () => {
 }
 fetchMemberGroup()
 
-// const addGroup = async () => {
-//   if (!groupDetail.name) {
-//     alert('員工群組名稱不能為空白')
-//     throw new Error('員工群組名稱不能為空白')
-//   }
-//   const { data } = await fetchWithToken('/api/groups', 'POST', {
-//     data: {
-//       name: groupDetail.name,
-//       point_baseline: groupDetail.pointBaseLine
-//     }
-//   })
+const createGroup = async (formDetail) => {
+  const postBody = {
+    data: formDetail
+  }
+  const { data } = await fetchWithToken('/api/groups', 'POST', postBody)
+  if (!data) {
+    console.log('create error')
+    return
+  }
+  memberGroups.value.push({
+    id: data.id,
+    count: 0,
+    ...data.attributes,
+  })
+  createGroupModal.value.modalClose()
+}
 
-//   alertResult(data.id, '新增群組')
-//   fetchMemberGroup()
-// }
+const editButtonClick = (group) => {
+  const { id, name, point_baseline, isDefault } = group
+  editGroupModal.value.modalOpen()
+  Object.assign(chosenGroupDetail, {
+    id,
+    name,
+    point_baseline,
+    isDefault,
+  })
+}
 
-// const toGroupDetail = (name, pointBaseLine, isDefault) => {
-//   console.log('click')
-//   groupDetail.name = name
-//   groupDetail.pointBaseLine = pointBaseLine
-//   groupDetail.isDefault = isDefault
-// }
+const editGroup = async (formDetail) => {
+  const putBody = {
+    data: formDetail
+  }
+  const { id } = chosenGroupDetail
+  const { data } = await fetchWithToken(`/api/groups/${id}`, 'PUT', putBody)
+  if (!data) {
+    console.log('edit error')
+    return
+  }
+  memberGroups.value = memberGroups.value.map((group) => {
+    if (group.id === id) {
+      return {
+        ...group,
+        ...data.attributes,
+      }
+    }
+    return group
+  })
+  editGroupModal.value.modalClose()
+}
 
-// const editGroup = async (id) => {
-//   if (!groupDetail.name) {
-//     alert('員工群組名稱不能為空白')
-//     throw new Error('員工群組名稱不能為空白')
-//   }
-
-//   const { data } = await fetchWithToken(`/api/groups/${id}`, 'PUT', {
-//     data: {
-//       name: groupDetail.name,
-//       point_baseline: groupDetail.pointBaseLine
-//     }
-//   })
-
-//   alertResult(data.id, '編輯群組')
-//   fetchMemberGroup()
-// }
-
-// const removeGroup = async (id) => {
-//   if (!confirm('確定要刪除群組嗎？')) return
-//   const { data } = await fetchWithToken(`/api/groups/${id}`, 'DELETE')
-//   alertResult(data.id, '刪除群組')
-//   fetchMemberGroup()
-// }
+const removeGroup = async (id) => {
+  if (!confirm(`確定要刪除群組${id}嗎？`)) return
+  const { data } = await fetchWithToken(`/api/groups/${id}`, 'DELETE')
+  if (!data) {
+    console.log('delete error')
+    return
+  }
+  memberGroups.value = memberGroups.value.filter((group) => group.id !== id)
+}
 </script>
