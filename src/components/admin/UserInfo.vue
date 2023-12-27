@@ -1,4 +1,4 @@
-<script setup>
+<!-- <script setup>
 import fetchWithToken from '@utils/fetchFn'
 import alertResult from '@utils/alertResult'
 import formatDateTime from '@utils/formatDateTime'
@@ -54,243 +54,173 @@ const resetPassword = async () => {
 }
 
 defineExpose({ username: userInfo.username })
-</script>
+</script> -->
 
 <template>
-  <div class="border-[1px] border-gray-300 col-start-1 col-span-5 row-start-1 row-span-4">
-    <div class="bg-[#949DB0] pl-2">帳號資料</div>
-    <div class="px-6 py-1">
-      <form
-        id="memberInfo"
-        @submit.prevent="handleSubmit"
-      >
-        <table>
-          <tr>
-            <td>
-              員工帳號
-            </td>
-            <td>
-              <input
-                :value="userInfo.username"
-                class="bg-[#C4C4C4] w-full h-8"
-                disabled
-              />
-            </td>
-          </tr>
-          <tr>
-            <td>
-              <label for="memberName">
-                姓名
-              </label>
-            </td>
-            <td>
-              <input
-                id="memberName"
-                type="text"
-                v-model="userInfo.nickname"
-              >
-            </td>
-          </tr>
-          <tr>
-            <td>
-              <label for="memberPhoneNumber">
-                電話
-              </label>
-            </td>
-            <td>
-              <input
-                id="memberPhoneNumber"
-                type="text"
-                v-model="userInfo.phone"
-              >
-            </td>
-          </tr>
-          <tr>
-            <td>
-              <label for="memberGroup">
-                員工群組
-              </label>
-            </td>
-            <td>
-              <select
-                id="memberGroup"
-                class="mx-3 min-w-[70px] text-sm bg-gray-300 p-1 rounded-xl"
-                v-model="userInfo.group"
-              >
-                <option
-                  v-for="group in groupOptions"
-                  :key="group.id"
-                  :value="group.id"
-                >{{ group.name }}</option>
-              </select>
-            </td>
-          </tr>
-          <tr>
-            <td>
-              <label for="memberState">
-                狀態
-              </label>
-            </td>
-            <td>
-              <select
-                id="memberState"
-                class="mx-3 min-w-[70px] text-sm bg-gray-300 p-1 rounded-xl"
-                v-model="userInfo.isActive"
-              >
-                <option value="">全部</option>
-                <option value="true">啟用</option>
-                <option value="false">停用</option>
-              </select>
-            </td>
-          </tr>
-          <tr>
-            <td>
-              <span>
-                註冊日期
-              </span>
-            </td>
-            <td>
-              <span class="inline-block leading-8 w-full h-8 border-[1px] border-gray-300 bg-[#C4C4C4]">
-                <input
-                  :value="formatDateTime(userInfo.createdAt)"
-                  class="bg-[#C4C4C4] w-full h-8"
-                  disabled
-                />
-              </span>
-            </td>
-          </tr>
-          <tr>
-            <td>
-              <label for="memberLineId">
-                Line ID
-              </label>
-            </td>
-            <td>
-              <input
-                id="memberLineId"
-                type="text"
-                v-model="userInfo.line_id"
-              >
-            </td>
-          </tr>
-          <tr>
-            <td class="flex justify-end">
-              <label for="memberDescription">
-                備註
-              </label>
-            </td>
-            <td>
-              <textarea
-                id="memberDescription"
-                cols="30"
-                rows="5"
-                class="resize-none px-2"
-                v-model="userInfo.note"
-              ></textarea>
-            </td>
-          </tr>
-          <tr>
-            <td></td>
-            <td>
-              <button class="bg-[#2055A5] text-white px-5 py-1">
-                修改
-              </button>
-            </td>
-          </tr>
-        </table>
-      </form>
-    </div>
-  </div>
-  <div class="border-[1px] border-gray-300 col-start-6 col-span-5  row-start-1 row-span-1">
-    <div class="bg-[#87AE91] pl-2">錢包紀錄</div>
-    <div class="px-6 py-1">
-      <div class="flex items-center">
-        <span class="basis-1/4 text-right mr-2">
-          主錢包點數
-        </span>
-        <span class="inline-block basis-1/2 leading-8 h-8 border-[1px] border-gray-300 bg-[#C4C4C4] text-right pr-4">
-          {{ userInfo.main_point }}
-        </span>
+  <div class="pt-3 text-dark">
+    <div class="row">
+      <div class="col-sm-6">
+        <div class="card">
+          <h5 class="card-header">帳號資料</h5>
+          <div class="card-body">
+            <form @submit.stop.prevent="editMember">
+              <div class="form-group row mb-2">
+                <label for="memberUserName" class="col-sm-3 col-form-label">員工帳號</label>
+                <div class="col-sm-9">
+                  <input type="text" class="form-control" id="memberUserName" v-model="userInfoDetail.username" disabled>
+                </div>
+              </div>
+
+              <div class="form-group row mb-2">
+                <label for="memberNickName" class="col-sm-3 col-form-label">姓名</label>
+                <div class="col-sm-9">
+                  <input type="text" class="form-control" id="memberNickName" v-model="userInfoDetail.nickname">
+                </div>
+              </div>
+
+              <div class="form-group row mb-2">
+                <label for="memberPhone" class="col-sm-3 col-form-label">電話</label>
+                <div class="col-sm-9">
+                  <input type="text" class="form-control" id="memberPhone" v-model="userInfoDetail.phone">
+                </div>
+              </div>
+
+              <div class="form-group row mb-2">
+                <label for="memberGroup" class="col-sm-3 col-form-label">員工群組</label>
+                <div class="col-sm-3">
+                  <select class="form-control" name="memberGroup" id="memberGroup" v-model="userInfoDetail.group">
+                    <option value="null">無</option>
+                    <option :value="group.id" v-for="group in groupOptions" :key="group.id">{{ group.name }}</option>
+                  </select>
+                </div>
+              </div>
+
+
+              <div class="form-group row mb-2">
+                <label for="memberState" class="col-sm-3 col-form-label">狀態</label>
+                <div class="col-sm-3">
+                  <select class="form-control" name="memberState" id="memberState" v-model="userInfoDetail.isActive">
+                    <option value="true">啟動</option>
+                    <option value="false">停用</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="form-group row mb-2">
+                <label for="memberRegisterDate" class="col-sm-3 col-form-label">註冊日期</label>
+                <div class="col-sm-9">
+                  <input type="text" class="form-control" id="memberRegisterDate" disabled value="2023-12-16 12:00:02">
+                </div>
+              </div>
+
+              <div class="form-group row mb-2">
+                <label for="memberLineId" class="col-sm-3 col-form-label">LineId</label>
+                <div class="col-sm-9">
+                  <input type="text" class="form-control" id="memberLineId" v-model="userInfoDetail.line_id">
+                </div>
+              </div>
+
+              <div class="form-group row mb-2">
+                <label for="memberNote" class="col-sm-3 col-form-label">備註</label>
+                <div class="col-sm-9">
+                  <textarea type="text" class="form-control" id="memberNote" v-model="userInfoDetail.note">
+                    
+                  </textarea>
+                </div>
+              </div>
+
+              <button type="submit" class="btn btn-primary">修改</button>
+            </form>
+          </div>
+        </div>
       </div>
-    </div>
-  </div>
-  <div class="border-[1px] border-gray-300 col-start-6 col-span-5 row-start-2 row-span-1">
-    <div class="bg-[#87AE91] pl-2">點數資訊</div>
-    <div class="px-6 py-1 flex flex-col gap-2">
-      <div class="flex items-center">
-        <span class="basis-1/4 text-right mr-2">
-          補點總和
-        </span>
-        <span class="inline-block basis-1/2 leading-8 h-8 border-[1px] border-gray-300 bg-[#C4C4C4] text-right pr-4">
-          {{ pointLog.add }}
-        </span>
-      </div>
-      <div class="flex items-center">
-        <span class="basis-1/4 text-right mr-2">
-          扣點總和
-        </span>
-        <span class="inline-block basis-1/2 leading-8 h-8 border-[1px] border-gray-300 bg-[#C4C4C4] text-right pr-4">
-          {{ pointLog.minus }}
-        </span>
-      </div>
-    </div>
-  </div>
-  <div class="border-[1px] border-gray-300 col-start-6 col-span-5 row-start-4 row-span-1">
-    <div class="bg-[#87AE91] pl-2">密碼管理</div>
-    <div class="px-6 py-1">
-      <div class="text-center flex flex-col justify-center gap-3 my-3">
-        <input
-          type="password"
-          class="border-[1px] border-gray-300 w-1/2 h-8 mx-auto"
-          v-model="newPassword"
-        >
-        <button
-          class="bg-[#2055A5] text-white px-5 py-1 w-1/2 mx-auto"
-          @click="resetPassword"
-        >
-          重設登入密碼
-        </button>
+      <div class="col-sm-6">
+        <div class="row row-cols-1 mb-2">
+          <div class="card">
+            <h5 class="card-header">錢包紀錄</h5>
+            <div class="card-body">
+              <form class="form-inline">
+                <div class="form-group">
+                  <label for="mainPoint" class="mr-2">主錢包點數</label>
+                  <input type="text" class="form-control text-right" :value="userInfoDetail.main_point" id="mainPoint" disabled>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+        <div class="row row-cols-1 mb-2">
+          <div class="card">
+            <h5 class="card-header">點數資訊</h5>
+            <div class="card-body">
+              <form class="form-inline">
+                <div class="form-group mb-2">
+                  <label for="addPointTotal" class="mr-2">補點總和</label>
+                  <input type="text" class="form-control text-right" :value="pointLog.add" id="addPointTotal" disabled>
+                </div>
+                <div class="form-group mb-2">
+                  <label for="minusPointTotal" class="mr-2">扣點總和</label>
+                  <input type="text" class="form-control text-right" :value="pointLog.minus" id="minusPointTotal" disabled>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+        <div class="row row-cols-1 mb-2">
+          <div class="card">
+            <h5 class="card-header">密碼管理</h5>
+            <div class="card-body text-center">
+              <form class="form-inline" @submit.prevent.stop="resetPassword">
+                <input type="text" class="form-control" v-model="newPassword">
+                <button type="submit" class="btn btn-primary">重設登入密碼</button>
+              </form>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
 </template>
 
-<style scoped>
-.active {
-  @apply bg-[#949DB0];
+<script setup>
+import { ref, reactive, unref } from 'vue'
+const props = defineProps({
+  userInfo: {
+    type: Object,
+    default: () => ({
+      createdAt: '',
+      username: '',
+      nickname: '',
+      group: '',
+      isActive: false,
+      line_id: '',
+      note: '',
+    })
+  },
+  pointLog: {
+    type: Object,
+    default: () => ({
+      add: 0,
+      minus: 0,
+    })
+  },
+  groupOptions: {
+    type: Array,
+    default: () => []
+  }
+})
+const emit = defineEmits(['editMember', 'resetPassword'])
+const userInfoDetail = reactive({})
+const newPassword = ref('')
+
+watch(props.userInfo, (newValue) => {
+  Object.assign(userInfoDetail, newValue)
+})
+
+const editMember = () => {
+  emit('editMember', userInfoDetail)
 }
 
-form tr td {
-  @apply py-1;
+const resetPassword = () => {
+  emit('resetPassword', unref(newPassword))
 }
-
-form tr td:first-child {
-  @apply text-right;
-  @apply pr-2;
-}
-
-form tr td input[type='text'],
-form tr td input[type='dateTime-local'] {
-  @apply border-[1px];
-  @apply border-gray-300;
-  @apply h-8;
-  @apply w-full
-}
-
-form tr td textarea {
-  @apply border-[1px];
-  @apply border-gray-300;
-}
-
-.filter-table td,
-.filter-table th {
-  @apply border-[1px];
-  @apply border-gray-400;
-  @apply text-center;
-  @apply p-2;
-}
-
-input {
-  padding: 0 8px;
-}
-</style>
+</script>
