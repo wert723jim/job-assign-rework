@@ -24,18 +24,41 @@ const menu = ref([
     icon: '&#xe6e0;',
     url: '#',
     hidden: false,
-    list: [{
+    list: [
+      {
         name: '員工管理',
         routerName: 'AdminMemberManage',
-    }, {
-        name: '員工群組',
-        routerName: 'AdminMemberGroup',
-    }, {
-        name: '點數管理',
-        routerName: 'AdminPointManage',
-    },
-  ]
+      }, {
+          name: '員工群組',
+          routerName: 'AdminMemberGroup',
+      }, {
+          name: '點數管理',
+          routerName: 'AdminPointManage',
+      },
+    ]
   },
+  {
+    name: '報表',
+    url: '#',
+    list: [{
+      name: '點數紀錄',
+      routerName: 'AdminPointRecord',
+    }],
+  },
+  {
+    name: '工具',
+    url: '#',
+    list: [
+      {
+        name: '商品上架',
+        routerName: 'AdminProductLaunch',
+      },
+      {
+        name: '公告欄',
+        routerName: 'AdminBulletinBoard',
+      }
+    ],
+  }
 ])
 </script>
 
