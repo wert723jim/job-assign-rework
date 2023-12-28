@@ -1,170 +1,207 @@
 <template>
-  <AdminLayout>
-    <template v-slot:header>
-      <h2 class="font-semibold text-lg px-3 py-2">點數管理</h2>
+  <Modal ref="MainPointManipulateModal">
+    <template v-slot:modalTitle>
+      主錢包操作
     </template>
+    <template v-slot:modalBody>
+      <MainPointManipulateForm
+      :chosen-member="chosenMember"
+      @manipulateMainPoint="manipulateMainPoint">
+      </MainPointManipulateForm>
+    </template>
+  </Modal>
+  <Layout>
     <template v-slot:content>
-      <div class="border-[1px] border-gray-400 px-6 py-4 mb-2">
-        <div>
-          <form>
-            <table>
-              <tr>
-                <td>
-                  <label for="member">
-                    帳號/姓名
-                  </label>
-                </td>
-                <td>
-                  <input
-                    name="member"
-                    id="member"
-                    type="text"
-                  >
-                </td>
-              </tr>
-              <tr>
-                <td>
-                  <label for="memberGroupName">
-                    員工群組
-                  </label>
-                </td>
-                <td>
-                  <select
-                    name="memberGroupName"
-                    id="memberGroupName"
-                  >
-                    <option
-                      value="0"
-                      selected
-                    >全部</option>
-                  </select>
-                </td>
-              </tr>
-              <tr>
-                <td>
-                  <button class="bg-[#2055A5] text-white px-5 py-1">查詢</button>
-                </td>
-                <td></td>
-              </tr>
-            </table>
-          </form>
-        </div>
-      </div>
+      <div class="main">
+        <div class="search">
+          <div>
+            <form class="float-left text-dark" @submit.stop.prevent="fetchMembers">
+              <div class="form-group">
+                <label for="infoKeyWords">帳號/姓名</label>
+                <input type="text" class="form-control" id="infoKeyWords" v-model="filterDetail.info">
+              </div>
+              
+              <div class="form-group">
+                <label for="memberGroup">員工群組</label>
+                <select id="memberGroup" v-model="filterDetail.group">
+                  <option value="null">全部</option>
+                  <option :value="group.id" v-for="group in groupOptions" :key="group.id">{{ group.name }}</option>
+                </select>
+              </div>
 
-      <div>
-        <div class="flex p-2 border-[1px] border-gray-400">
-          共
-          <span>
-            220
-          </span>
-          筆資料，總頁數
-          <span>
-            5
-          </span>
-          頁 每頁筆數:
-          <div>
-            <select name="itemsCount">
-              <option
-                value="50"
-                selected
-              >50</option>
-            </select>
+              <button type="submit" class="btn btn-primary">查詢</button>
+            </form>
           </div>
-          目前第:
-          <div>
-            <select name="chosenPage">
-              <option
-                value="1"
-                selected
-              >1</option>
-            </select>
-          </div>
-          頁
         </div>
-        <table class="filter-table w-full">
-          <thead>
-            <tr class="bg-[#7B7B7B] text-white">
-              <th>
-                編號
-              </th>
-              <th>
-                員工帳號
-              </th>
-              <th>
-                姓名
-              </th>
-              <th>
-                狀態
-              </th>
-              <th>
-                群組
-              </th>
-              <th>
-                主錢包餘額
-              </th>
-              <th>
-                註冊日期
-              </th>
-              <th>
-                最近登入IP
-              </th>
-              <th>
-                功能
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr class="text-center">
-              <td>
-                1
-              </td>
-              <td>
-                DMP0001
-              </td>
-              <td>
-                張三豐
-              </td>
-              <td>
-                啟用
-              </td>
-              <td>
-                新進
-              </td>
-              <td>
-                1000.00
-              </td>
-              <td>
-                2023-12-16 12:00:02
-              </td>
-              <td>
-                149.120.3.8
-              </td>
-              <td>
-                <button class="bg-[#2055A5] text-white px-5 py-1">
-                  修改
-                </button>
-              </td>
-            </tr>
-          </tbody>
-        </table>
+
+        <div>
+          <div class="flex text-dark p-2">
+            共
+            <span>
+              1
+            </span>
+            筆資料，總頁數
+            <span>
+              1
+            </span>
+            頁 每頁筆數:
+            <div>
+              <select name="itemsCount">
+                <option value="10" selected>
+                  10
+                </option>
+              </select>
+            </div>
+            目前第:
+            <div>
+              <select name="chosenPage">
+              </select>
+            </div>
+            頁
+          </div>
+        </div>
+
+        <div class="table-box">
+          <table class="table">
+            <thead>
+              <tr>
+                <th scope="col">編號</th>
+                <th scope="col">員工帳號</th>
+                <th scope="col">姓名</th>
+                <th scope="col">狀態</th>
+                <th scope="col">群組</th>
+                <th scope="col">主錢包餘額</th>
+                <th scope="col">註冊日期</th>
+                <th scope="col">最近登入IP</th>
+                <th scope="col">功能</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="member in members" :key="member.id">
+                <th scope="row">
+                  {{ member.id }}
+                </th>
+                <td>
+                  {{ member.username }}
+                </td>
+                <td>
+                  {{ member.nickname }}
+                </td>
+                <td>
+                  <span v-if="member.isActive">啟動</span>
+                  <span v-else>停用</span>
+                </td>
+                <td>
+                  <div v-if="member.group">
+                    {{ member.group.name }}
+                  </div>
+                  <div v-else>
+                    無
+                  </div>
+                </td>
+                <td>
+                  {{ member.main_point}}
+                </td>
+                <td>
+                  <div>
+                    {{ formatDate(member.createdAt) }}
+                  </div>
+                  <div>
+                    {{ formatTime(member.createdAt) }}
+                  </div>
+                </td>
+                <td>
+                  
+                </td>
+                <td>
+                  <button class="btn btn-primary" @click.prevent="chooseMember(member)">加扣點</button>
+                </td>
+              </tr>
+              </tbody>
+          </table>
+        </div>
       </div>
     </template>
-  </AdminLayout>
+  </Layout>
 </template>
 
-<style>
-form td:first-child {
-  @apply text-right;
-  @apply pr-2;
+<script setup>
+import { ref, reactive, onMounted } from 'vue'
+import Modal from '../../components/admin/Modal.vue'
+import Layout from '../../components/admin/Layout.vue'
+import MainPointManipulateForm from '../../components/admin/form/MainPointManipulateForm.vue'
+import fetchWithToken from '@utils/fetchFn'
+import getFilterQuery from '@utils/getFilterQuery'
+import { formatDate, formatTime } from '@utils/formatDateTime'
+import qs from 'qs'
+
+const groupOptions = ref([])
+const members = ref([])
+const filterDetail = reactive({
+  info: '',
+  group: null,
+})
+const pagination = reactive({
+  page: 1,
+  pageSize: 10,
+  allCount: 0
+})
+const MainPointManipulateModal = ref(null)
+const chosenMember = reactive({
+  member: '',
+  isActive: false,
+  main_point: 0,
+})
+
+const queryString = qs.stringify({
+  fields: ['username', 'nickname', 'phone', 'main_point', 'createdAt', 'note', 'isActive'],
+  populate: {
+    group: {
+      fields: ['name']
+    },
+    login_logs: true
+  },
+  sort: ['id'],
+  // start: 2,
+  // limit: 2
+})
+
+const fetchMembers = async () => {
+  const { filterQuery, countFilterQuery } = getFilterQuery(filterDetail)
+  pagination.allCount = await fetchWithToken(`/api/users/count?${countFilterQuery}`)
+  members.value = await fetchWithToken(`/api/users?${queryString}${filterQuery}`)
 }
 
-table td {
-  @apply py-1;
+const fetchGroupOptions = async () => {
+  const { data } = await fetchWithToken('/api/groups?fields[0]=name&fields[1]=isDefault')
+  groupOptions.value = data.map((group) => ({
+    id: group.id,
+    name: group.attributes.name,
+  }))
 }
 
-.filter-table td,
-.filter-table th {
-  border: 1px solid;
-  @apply border-gray-400;
+const chooseMember = (member) => {
+  Object.assign(chosenMember, {
+    id: member.id,
+    member: member.username + `(${member.nickname})`,
+    isActive: member.isActive,
+    main_point: member.main_point,
+  })
+  MainPointManipulateModal.value.modalOpen()
 }
-</style>
+
+const manipulateMainPoint = async (formDetail) => {
+  const postBody = {
+    data: {
+      user: chosenMember.id,
+      ...formDetail,
+    }
+  }
+  const data = await fetchWithToken('/api/point-logs', 'POST', postBody)
+  console.log(data)
+}
+
+onMounted(() => {
+  fetchGroupOptions()
+})
+</script>
