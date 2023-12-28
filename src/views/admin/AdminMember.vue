@@ -37,6 +37,9 @@
             @removeCryptoAddress="removeCryptoAddress"
             v-show="chosenTab === 'bankAccount'">
           </Bank>
+          <PointRecord
+            @filterPointLogInPeriod="filterPointLogInPeriod">
+          </PointRecord>
       </div>
       </div>
     </template>
@@ -48,6 +51,7 @@
 import Layout from '../../components/admin/Layout.vue'
 import UserInfo from '../../components/admin/UserInfo.vue'
 import Bank from '../../components/admin/Bank.vue'
+import PointRecord from '../../components/admin/PointRecord.vue'
 import { ref, reactive } from 'vue'
 import { useRoute } from 'vue-router'
 import fetchWithToken from '@utils/fetchFn'
@@ -107,6 +111,11 @@ const fetchUserCryptoAddressList = async () => {
 const fetchUserPointLog = async () => {
   const data = await fetchWithToken(`/api/point-log/${route.params.memberId}`)
   Object.assign(pointLog, data)
+}
+
+const filterPointLogInPeriod = async () => {
+  const data = await fetchWithToken('/api/point-logs?filters[user]=14&filters[$and][0][createdAt][$gt]=2023-12-19T08:20:40Z&filters[$and][1][createdAt][$lt]=2023-12-19T08:50:00Z&filters[edit_point][$lt|$gt]=0')
+  console.log(data)
 }
 
 const editMember = async (userInfoDetail) => {

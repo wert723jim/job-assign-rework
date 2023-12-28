@@ -21,6 +21,7 @@ declare module 'vue' {
     AdminLayout: typeof import('./components/admin/Layout.vue')['default']
     AdminMemberUserInfo: typeof import('./components/admin/MemberUserInfo.vue')['default']
     AdminModal: typeof import('./components/admin/Modal.vue')['default']
+    AdminPointRecord: typeof import('./components/admin/PointRecord.vue')['default']
     AdminSearchForm: typeof import('./components/admin/SearchForm.vue')['default']
     AdminSider: typeof import('./components/admin/Sider.vue')['default']
     AdminSiderList: typeof import('./components/admin/SiderList.vue')['default']
