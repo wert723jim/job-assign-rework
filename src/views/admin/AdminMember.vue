@@ -28,6 +28,15 @@
             @resetPassword="resetPassword"
             v-show="chosenTab === 'accountInfo'">            
           </UserInfo>
+          <Bank
+            :bank-list="bankList"
+            :crypto-address-list="cryptoAddressList"
+            @addBank="addBank"
+            @removeBank="removeBank"
+            @addCryptoAddress="addCryptoAddress"
+            @removeCryptoAddress="removeCryptoAddress"
+            v-show="chosenTab === 'bankAccount'">
+          </Bank>
       </div>
       </div>
     </template>
@@ -38,6 +47,7 @@
 <script setup>
 import Layout from '../../components/admin/Layout.vue'
 import UserInfo from '../../components/admin/UserInfo.vue'
+import Bank from '../../components/admin/Bank.vue'
 import { ref, reactive } from 'vue'
 import { useRoute } from 'vue-router'
 import fetchWithToken from '@utils/fetchFn'
@@ -62,6 +72,8 @@ const userInfo = reactive({
   createdAt: '',
   main_point: 0
 })
+const bankList = ref([])
+const cryptoAddressList = ref([])
 
 const chooseTab = (tabName) => {
   chosenTab.value = tabName
@@ -74,6 +86,22 @@ const fetchMemberById = async () => {
     group: data.group?.id || null,
   }
   Object.assign(userInfo, data)
+}
+
+const fetchUserBankList = async () => {
+  const { data } = await fetchWithToken(`/api/banks?filters[user]=${route.params.memberId}`)
+  bankList.value = data.map((item) => ({
+    id: item.id,
+    ...item.attributes,
+  }))
+}
+
+const fetchUserCryptoAddressList = async () => {
+  const { data } = await fetchWithToken(`/api/cryptos?filters[user]=${route.params.memberId}`)
+  cryptoAddressList.value = data.map((item) => ({
+    id: item.id,
+    ...item.attributes,
+  }))
 }
 
 const fetchUserPointLog = async () => {
@@ -107,6 +135,66 @@ const resetPassword = async (newPassword) => {
   console.log(data)
 }
 
+const addBank = async (bankDetail) => {
+  const postBody = {
+    data: {
+      ...bankDetail,
+      user: route.params.memberId,
+    }
+  }
+  const data = await fetchWithToken('/api/banks', 'POST', postBody)
+  if( !data ) {
+    console.log('add bank error')
+    return
+  }
+  bankList.value.push({
+    ...bankDetail,
+  })
+}
+
+const addCryptoAddress = async (cryptoAddress) => {
+  if (!cryptoAddress) {
+    console.log('虛擬錢包位址欄位不得為空')
+    return
+  }
+  const postBody = {
+    data: {
+      address: cryptoAddress,
+      user: route.params.memberId
+    }
+  }
+  const data = await fetchWithToken('/api/cryptos', 'POST', postBody)
+  if (!data) {
+    console.log('add crypto address error')
+    return
+  }
+
+  cryptoAddressList.value.push({
+    address: cryptoAddress,
+  })
+}
+
+const removeBank = async (bankId) => {
+  const data = await fetchWithToken(`/api/banks/${bankId}`, 'DELETE')
+
+  if (!data) {
+    console.log('remove bank error')
+    return
+  }
+  bankList.value = bankList.value.filter((bank) => bank.id !== bankId)
+}
+
+const removeCryptoAddress = async (addressId) => {
+  const data = await fetchWithToken(`/api/cryptos/${addressId}`, 'DELETE')
+
+  if (!data) {
+    console.log('remove crypto address error')
+    return
+  }
+
+  cryptoAddressList.value = cryptoAddressList.value.filter((address) => address.id !== addressId)
+}
+
 onMounted(async () => {
   const { data } = await fetchWithToken('/api/groups?fields[0]=name&fields[1]=isDefault')
   groupOptions.value = data.map((group) => ({
@@ -114,6 +202,8 @@ onMounted(async () => {
     name: group.attributes.name
   }))
   fetchMemberById()
+  fetchUserBankList()
+  fetchUserCryptoAddressList()
   fetchUserPointLog()
 })
 
