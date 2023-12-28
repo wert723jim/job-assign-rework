@@ -108,7 +108,6 @@
                   {{ member.phone }}
                 </td>
                 <td>
-                  
                   <div v-if="member.group">
                     {{ member.group.name }}
                   </div>

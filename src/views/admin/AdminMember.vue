@@ -68,7 +68,11 @@ const chooseTab = (tabName) => {
 }
 
 const fetchMemberById = async () => {
-  const data = await fetchWithToken(`/api/users/${route.params.memberId}?populate[group][fields]=name`)
+  let data = await fetchWithToken(`/api/users/${route.params.memberId}?populate[group][fields]=name`)
+  data = {
+    ...data,
+    group: data.group?.id || null,
+  }
   Object.assign(userInfo, data)
 }
 
