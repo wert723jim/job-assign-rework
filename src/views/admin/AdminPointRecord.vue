@@ -1,74 +1,72 @@
 <template>
   <Layout>
     <template v-slot:content>
-      <div class="pt-3 text-dark">
-        <div class="row mb-2">
-          <div class="col-10">
-            <div class="card">
-              <h5 class="card-header">登入查詢</h5>
-              <div class="card-body">
-              <form>
-                <div class="form-group row mb-2">
-                  <span class="col-form-label col-auto">日期區間</span>
-                  <div class="input-group col-9">
-                    <label class="sr-only" for="startDateTime"></label>
-                    <input type="datetime-local" class="form-control" id="startDateTime">
-                    <div class="input-group-prepend input-group-append">
-                      <label class="input-group-text">-</label>
-                    </div>
-                    <label class="sr-only" for="endDateTime"></label>
-                    <input type="dateTime-local" class="form-control" id="endDateTime">
+      <div class="pt-3 text-dark main">
+        <div class="mb-2">
+          <div class="card">
+            <h5 class="card-header">登入查詢</h5>
+            <div class="card-body">
+            <form @submit.prevent.stop="fetchMembers">
+              <div class="form-group row mb-2">
+                <span class="col-form-label col-auto">日期區間</span>
+                <div class="input-group col-9">
+                  <label class="sr-only" for="startDateTime"></label>
+                  <input type="datetime-local" class="form-control" id="startDateTime" v-model="filterDetail.startDate">
+                  <div class="input-group-prepend input-group-append">
+                    <label class="input-group-text">-</label>
                   </div>
+                  <label class="sr-only" for="endDateTime"></label>
+                  <input type="dateTime-local" class="form-control" id="endDateTime" v-model="filterDetail.endDate">
                 </div>
-
-                <div class="form-group row mb-2">
-                  <label for="memberInfo" class="col-form-label col-auto">帳號/姓名</label>
-                  <div class="col-auto">
-                    <input type="text" class="form-control">
-                  </div>
-                  <label for="memberInfo" class="col-form-label col-auto">員工群組</label>
-                  <div class="col-auto">
-                    <select name="" id="" class="form-control">
-                      <option value="">123</option>
-                    </select>
-                  </div>
-                </div>
-
-                <div class="form-group">
-                  
-                </div>
-                <div class="form-group row mb-2 align-items-center">
-                  <span class="col-form-label col-auto">狀態</span>
-                  <div class="col-auto">
-                    <div class="form-check form-check-inline">
-                      <input class="form-check-input" type="radio" name="pointState" id="all">
-                      <label class="form-check-label" for="all">全部</label>
-                    </div>
-
-                    <div class="form-check form-check-inline">
-                      <input class="form-check-input" type="radio" name="pointState" id="add">
-                      <label class="form-check-label" for="add">補點</label>
-                    </div>
-
-                    <div class="form-check form-check-inline">
-                      <input class="form-check-input" type="radio" name="pointState" id="minus">
-                      <label class="form-check-label" for="minus">扣點</label>
-                    </div>
-                  </div>
-                </div>
-                <div class="form-group row">
-                  <div class="mr-2 col-2"></div>
-                  <div class="col-9">
-                    <button class="btn btn-primary">查詢</button>
-                  </div>
-                </div>
-              </form>
               </div>
+
+              <div class="form-group row mb-2">
+                <label for="memberInfo" class="col-form-label col-auto">帳號/姓名</label>
+                <div class="col-auto">
+                  <input type="text" class="form-control" v-model="filterDetail.info">
+                </div>
+                <label for="memberInfo" class="col-form-label col-auto">員工群組</label>
+                <div class="col-auto">
+                  <select name="" id="" class="form-control" v-model="filterDetail.group">
+                    <option value="null">無</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="form-group">
+                
+              </div>
+              <div class="form-group row mb-2 align-items-center">
+                <span class="col-form-label col-auto">狀態</span>
+                <div class="col-auto">
+                  <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="pointState" id="all" v-model="filterDetail.pointState" value="all">
+                    <label class="form-check-label" for="all">全部</label>
+                  </div>
+
+                  <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="pointState" id="add" v-model="filterDetail.pointState" value="add">
+                    <label class="form-check-label" for="add">補點</label>
+                  </div>
+
+                  <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="pointState" id="minus" v-model="filterDetail.pointState" value="minus">
+                    <label class="form-check-label" for="minus">扣點</label>
+                  </div>
+                </div>
+              </div>
+              <div class="form-group">
+                <div class="mr-2"></div>
+                <div class="col-9">
+                  <button class="btn btn-primary" type="submit">查詢</button>
+                </div>
+              </div>
+            </form>
             </div>
           </div>
         </div>
-        <div class="row">
-          <div class="col-10">
+
+
             <div class="card">
               <h5 class="card-header">主錢包紀錄</h5>
               <div class="card-body p-0">
@@ -101,42 +99,47 @@
                     頁
                   </div>
                 </div>
-                <div class="table-box">
-                  <table class="table">
-                    <thead class="thead-dark">
-                      <tr>
-                        <th scope="col">編號</th>
-                        <th scope="col">員工帳號</th>
-                        <th scope="col">姓名</th>
-                        <th scope="col">狀態</th>
-                        <th scope="col">群組</th>
-                        <th scope="col">點數紀錄</th>
-                        <th scope="col">主錢包餘額</th>
-                        <th scope="col">異動時間</th>
-                        <th scope="col">事由</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr>
-                        <th scope="row"></th>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                      </tr>
-                      <tr>
-                        <td colspan="3"></td>
-                        <td colspan="2" class="text-center">總計</td>
-                        <td>100</td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
               </div>
             </div>
-          </div>
+
+
+        <div class="table-box">
+          <table class="table">
+            <thead class="thead-dark">
+              <tr>
+                <th scope="col">編號</th>
+                <th scope="col">員工帳號</th>
+                <th scope="col">姓名</th>
+                <th scope="col">狀態</th>
+                <th scope="col">群組</th>
+                <th scope="col">點數紀錄</th>
+                <th scope="col">主錢包餘額</th>
+                <th scope="col">異動時間</th>
+                <th scope="col">事由</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="log in pointLogs" :key="log.id">
+                <th scope="row">{{ log.id }}</th>
+                <td>{{ log.username }}</td>
+                <td>{{ log.nickname }}</td>
+                <td>{{ log.isActive }}</td>
+                <td>{{ log.group }}</td>
+                <td>{{ log.edit_point }}</td>
+                <td>{{ log.balance }}</td>
+                <td>{{ log.createdAt }}</td>
+                <td scope="row">{{ log.cause }}</td>
+              </tr>
+              <tr>
+                <td colspan="3"></td>
+                <td colspan="2" class="text-center">總計</td>
+                <td>100</td>
+                <td></td>
+                <td></td>
+                <td></td>
+              </tr>
+            </tbody>
+          </table>
         </div>
       </div>
     </template>
@@ -144,6 +147,7 @@
 </template>
 
 <script setup>
+import { ref, reactive } from 'vue'
 import Layout from '../../components/admin/Layout.vue'
 import fetchWithToken from '@utils/fetchFn.js'
 // import qs from 'qs'
@@ -160,9 +164,44 @@ import fetchWithToken from '@utils/fetchFn.js'
 //   // start: 2,
 //   // limit: 2
 // })
-const fetchMember = async () => {
-  const data = await fetchWithToken('/api/point-logs?filters[$or][0][username][$contains]={admin}')
-  console.log(data)
+const filterDetail = reactive({
+  startDate: '',
+  endDate: '',
+  info: '',
+  group: null,
+  pointState: 'all',
+})
+
+const pointLogs = ref([])
+
+// GET /api/users?fields[0]=username&fields[1]=nickname&fields[2]=phone&fields[3]=main_point&fields[4]=createdAt&fields[5]=note&populate[group][fields]=name&populate[login_logs][sort]=createdAt%3Adesc&filters[$or][0][username][$contains]={"username"}&filters[$or][1][nickname][$contains]={"nickname"}&filters[$or][2][phone][$contains]={"phone"}
+const fetchMembers = async () => {
+  console.log(filterDetail)
+  let queryString = ''
+  if (filterDetail.startDate) {
+    console.log('start')
+    queryString += `&filters[$and][0][createdAt][$gt]=${filterDetail.startDate}`
+  }
+
+  if (filterDetail.startDate && filterDetail.endDate) {
+    queryString += `&filters[$and][1][createdAt][$lt]=${filterDetail.endDate}`
+  }
+
+  if (filterDetail.info) {
+    queryString += `&filters[$or][2][username][$contains]=${filterDetail.info}&filters[$or][3][nickname][$contains]=${filterDetail.info}`
+  }
+  console.log(queryString)
+  const { data } = await fetchWithToken(`/api/point-logs?${queryString}&populate=*`)
+  pointLogs.value = data.map((item) => ({
+    id: item.id,
+    username: item.attributes.user.data?.attributes.username || '查無此人',
+    nickname: item.attributes.user.data?.attributes.nickname || '查無此人',
+    isActive: item.attributes.user.data?.attributes.isActive || '查無此人',
+    group: item.attributes.user.data?.attributes.group || '查無群組',
+    edit_point: item.attributes.edit_point,
+    balance: item.attributes.balance,
+    createdAt: item.attributes.createdAt,
+    cause: item.attributes.cause,
+  }))
 }
-fetchMember()
 </script>
