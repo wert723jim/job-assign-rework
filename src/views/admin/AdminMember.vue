@@ -169,15 +169,15 @@ const editMember = async (userInfoDetail) => {
 }
 
 const resetPassword = async (newPassword) => {
-  if (!newPassword) {
-    console.log('密碼欄位不得為空')
-    return
-  }
   const putBody = {
     password: newPassword
   } 
   const data = await fetchWithToken(`/api/users/${route.params.memberId}`, 'PUT', putBody)
-  console.log(data)
+  
+  if( !data.data ) {
+    console.log('reset password error')
+    return
+  }
 }
 
 const addBank = async (bankDetail) => {

@@ -216,19 +216,24 @@ const createMember = async (formDetail) => {
   }
 
   const data = await fetchWithoutToken('/api/auth/local/register', 'POST', postBody)
-  console.log(data)
-  if (!data) {
+  if (!data.data) {
     console.log('create member error')
     return
   }
 
   const { id, createdAt, main_point } = data.user
 
+  const selectedGroup = groupOptions.value.find((option) => option.id === group)
+
   members.value.push({
-    ...formDetail,
+    username,
+    nickname,
+    phone,
+    group: selectedGroup,
     main_point,
     id,
     createdAt,
+    note,
   })
 
   createMemberModal.value.modalClose()

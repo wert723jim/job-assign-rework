@@ -182,7 +182,7 @@ defineExpose({ username: userInfo.username })
 </template>
 
 <script setup>
-import { ref, reactive, unref } from 'vue'
+import { ref, reactive } from 'vue'
 const props = defineProps({
   userInfo: {
     type: Object,
@@ -221,6 +221,20 @@ const editMember = () => {
 }
 
 const resetPassword = () => {
-  emit('resetPassword', unref(newPassword))
+  newPassword.value = newPassword.value.trim()
+  if (!newPassword.value) {
+    console.log('密碼欄位不得為空')
+    return
+  }
+  if (newPassword.value.indexOf(' ') >= 0) {
+    console.log('密碼欄位字元間不得有空白')
+    return
+  }
+  if (newPassword.value.length < 6) {
+    console.log('密碼須超過六個字元')
+    return
+  }
+  emit('resetPassword', newPassword.value)
+  newPassword.value = ''
 }
 </script>
