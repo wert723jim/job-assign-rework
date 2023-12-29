@@ -1,9 +1,11 @@
 <template>
   <UserLayout>
-    <div class="my-4 md:hidden">
-      <UserSearchInput />
+    <div class="flex flex-col-reverse">
+      <div class="my-4 md:hidden">
+        <UserSearchInput />
+      </div>
+      <UserMarquee />
     </div>
-    <UserMarquee />
     <div class="grid md:grid-cols-4 grid-cols-2 gap-8 md:mt-[64px]">
       <UserProduct
         v-for="product in productList"
@@ -12,14 +14,15 @@
       />
     </div>
     <div
-      v-if="!productList?.length"
+      v-if="productList === null || productList.length === 0"
       class="text-gray-400 text-center"
-    >沒有商品</div>
+    >沒有商品 {{ productList?.length }}</div>
   </UserLayout>
 </template>
 
 <script setup>
 import { fetchWithoutToken } from '@utils/fetchFn.js'
+import { watch } from 'vue'
 
 const route = useRoute()
 const optionUrl = computed(() => route.query.search && `&filters[$and][1][name][$contains]=${route.query.search}`)

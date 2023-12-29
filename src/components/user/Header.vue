@@ -69,7 +69,7 @@
       <!-- announcement -->
       <span
         v-if="route.path !== '/login'"
-        class="text-gray-400 my-auto cursor-pointer whitespace-nowrap hidden md:block"
+        class="text-gray-400 my-auto cursor-pointer whitespace-nowrap hidden md:block -ml-2"
         @click="router.push('/announcement')"
       >
         公告欄

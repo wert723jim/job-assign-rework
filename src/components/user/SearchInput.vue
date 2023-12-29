@@ -1,5 +1,5 @@
 <template>
-  <div class="w-[345px] h-[35px] relative ">
+  <div class="md:w-[345px] h-[35px] relative ">
     <img
       src="@/assets/search.svg"
       alt="logo"
