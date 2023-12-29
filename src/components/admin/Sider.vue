@@ -55,7 +55,7 @@ const menu = ref([
       },
       {
         name: '公告欄',
-        routerName: 'AdminBulletinBoard',
+        routerName: 'AdminAnnouncement',
       }
     ],
   }

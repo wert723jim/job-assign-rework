@@ -68,9 +68,9 @@ const routes = [
     component: () => import('../views/admin/AdminProductLaunch.vue'),
   },
   {
-    path: '/admin/bulletinBoard',
-    name: 'AdminBulletinBoard',
-    component: () => import('../views/admin/AdminBulletinBoard.vue'),
+    path: '/admin/announcement',
+    name: 'AdminAnnouncement',
+    component: () => import('../views/admin/AdminAnnouncement.vue'),
   },
   {
     path: '/:catchAll(.*)',
