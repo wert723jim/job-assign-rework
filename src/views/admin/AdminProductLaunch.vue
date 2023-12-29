@@ -1,119 +1,164 @@
 <template>
-  <AdminLayout>
-    <template v-slot:header>
-      <h2 class="font-semibold text-lg px-3 py-2">商品上架</h2>
+  <Modal ref="creatProductModal">
+    <template v-slot:modalTitle>
+      新增商品
     </template>
+    <template v-slot:modalBody>
+      <CreateProductForm
+        @confirmForm="createProduct">
+      </CreateProductForm>
+    </template>
+  </Modal>
+  <Modal ref="editProductModal">
+    <template v-slot:modalTitle>
+      修改商品
+    </template>
+    <template v-slot:modalBody>
+      <CreateProductForm
+        :product-info="chosenProduct"
+        @confirmForm="editProduct">
+      </CreateProductForm>
+    </template>
+  </Modal>
+  <Layout>
     <template v-slot:content>
-      <div class="border-[1px] border-gray-300 h-full">
-        <div class="flex items-center gap-2 p-2 border-b-[1px] border-gray-300">
-          <div>
-            <button class="bg-[#2055A5] text-white px-5 py-1">
-              新增商品
-            </button>
-          </div>
-          <div>
-            (前台最多顯示16項)
-          </div>
+      <div class="main">
+        <div class="search">
+          <button type="button" class="btn btn-primary float-left mr-1" @click.prevent="creatProductModal.modalOpen()">
+            <i class="iconfont">&#xe665;</i>新增
+          </button>
         </div>
-        <div class="p-2">
-          顯示
-          <select
-            name=""
-            id="listItemsCount"
-          >
-            <option
-              value="10"
-              selected
-            >10</option>
-          </select>
-          條目
-        </div>
-        <div>
-          <table class="filter-table w-full">
+        <div class="table-box">
+          <table class="table">
             <thead>
-              <tr class="bg-[#7B7B7B] text-white">
-                <th>
-                  編號
-                </th>
-                <th>
-                  修改排序
-                </th>
-                <th>
-                  商品名稱
-                </th>
-                <th>
-                  創建日期
-                </th>
-                <th>
-                  發布狀態
-                </th>
-                <th>
-                  訂單狀態
-                </th>
-                <th>
-                  功能
-                </th>
+              <tr>
+                <th scope="col">編號</th>
+                <th scope="col">商品名稱</th>
+                <th scope="col">創建日期</th>
+                <th scope="col">發布狀態</th>
+                <th scope="col">訂單狀態</th>
+                <th scope="col">功能</th>
               </tr>
             </thead>
             <tbody>
-              <tr>
+              <tr v-for="product in products" :key="product.id">
+                <th scope="row">
+                  {{ product.id }}
+                </th>
                 <td>
-                  1
+                  {{ product.name }}
                 </td>
                 <td>
-                  <select
-                    name=""
-                    id=""
-                  >
-                    <option
-                      value="1"
-                      selected
-                    >1</option>
-                  </select>
+                  {{ product.createdAt }}
                 </td>
                 <td>
-                  歐美影片聽打員
+                  {{ product.isDisplay }}
                 </td>
                 <td>
-                  2023-12-16 12:00:02
+                  {{ product.isOpen }}
                 </td>
                 <td>
-                  <select
-                    name=""
-                    id="productLaunchState"
-                  >
-                    <option
-                      value="1"
-                      selected
-                    >顯示</option>
-                  </select>
+                  <button class="btn btn-primary" @click="chooseProduct(product)">修改</button>
+                  <button class="btn btn-danger" @click="removeProduct(product.id)">刪除</button>
                 </td>
-                <td>
-                  額滿
-                </td>
-                <td>
-                  <div class="flex justify-center gap-1">
-                    <button class="bg-[#2055A5] text-white px-5 py-1">
-                      修改
-                    </button>
-                    <button class="bg-[#D92F14] text-white px-5 py-1">
-                      刪除
-                    </button>
-                  </div>
-                </td>
-            </tr>
-          </tbody>
-        </table>
+              </tr>
+              </tbody>
+          </table>
+        </div>
       </div>
-    </div>
-  </template>
-</AdminLayout></template>
+    </template>
+  </Layout>
+</template>
 
+<script setup>
+import { ref } from 'vue'
+import Layout from '../../components/admin/Layout.vue'
+import Modal from '../../components/admin/Modal.vue'
+import CreateProductForm from '../../components/admin/form/CreateProductForm.vue'
+import fetchWithToken from '@utils/fetchFn.js'
 
-<style scoped>.filter-table td,
-.filter-table th,
-.filter-table {
-  @apply border-[1px];
-  @apply border-gray-400;
-  @apply text-center;
-}</style>
+const products = ref([])
+const creatProductModal = ref(null)
+const editProductModal = ref(null)
+const chosenProduct = reactive({
+  id: 0,
+  name: '',
+  isDisplay: false,
+  isOpen: false,
+  url: '',
+  image: ''
+})
+
+const fetchProducts = async () => {
+  const { data } = await fetchWithToken('/api/products')
+  products.value = data.map((item) => ({
+    id: item.id,
+    ...item.attributes,
+  }))
+}
+
+const chooseProduct = (product) => {
+  const { id, name, isDisplay, isOpen, url, image } = product
+  Object.assign(chosenProduct, {
+    id,
+    name,
+    isDisplay,
+    isOpen,
+    url,
+    image,
+  })
+  editProductModal.value.modalOpen()
+}
+
+const createProduct = async (formDetail) => {
+  delete formDetail['image']
+  const postBody = {
+    data: formDetail,
+  }
+  const { data } = await fetchWithToken('/api/products', 'POST', postBody)
+  if (!data) {
+    console.log('create product error')
+    return
+  }
+
+  products.value.push({
+    id: data.id,
+    ...data.attributes,
+  })
+
+  creatProductModal.value.modalClose()
+}
+
+const editProduct = async (formDetail) => {
+  delete formDetail['image']
+  const putBody = {
+    data: formDetail,
+  }
+  const { data } = await fetchWithToken(`/api/products/${chosenProduct.id}`, 'PUT', putBody)
+  if (!data) {
+    console.log('edit product error')
+    return
+  }
+
+  products.value = products.value.map((product) => {
+    if(product.id === data.id) {
+      return {
+        id: data.id,
+        ...data.attributes,
+      }
+    }
+    return product
+  })
+}
+
+const removeProduct = async (productId) => {
+  const { data } = await fetchWithToken(`/api/products/${productId}`, 'DELETE')
+  if (!data) {
+    console.log('delete product error')
+    return
+  }
+  products.value = products.value.filter((product) => product.id !== productId)
+}
+
+fetchProducts()
+</script>

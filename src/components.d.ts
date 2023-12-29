@@ -15,6 +15,7 @@ declare module 'vue' {
     AdminBank: typeof import('./components/admin/Bank.vue')['default']
     AdminFormBulletinBoardForm: typeof import('./components/admin/form/BulletinBoardForm.vue')['default']
     AdminFormCreateMemberForm: typeof import('./components/admin/form/CreateMemberForm.vue')['default']
+    AdminFormCreateProductForm: typeof import('./components/admin/form/CreateProductForm.vue')['default']
     AdminFormMainPointManipulateForm: typeof import('./components/admin/form/MainPointManipulateForm.vue')['default']
     AdminFormMemberGroupForm: typeof import('./components/admin/form/MemberGroupForm.vue')['default']
     AdminHeader: typeof import('./components/admin/Header.vue')['default']
