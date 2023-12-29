@@ -18,25 +18,6 @@
                 <input type="dateTime-local" class="form-control" id="endDateTime" v-model="filterDetail.endDate">
               </div>
             </div>
-            <div class="form-group row mb-2 align-items-center">
-              <span class="col-form-label mr-2 col-2">狀態</span>
-              <div class="col-9">
-                <div class="form-check form-check-inline">
-                  <input class="form-check-input" type="radio" v-model="filterDetail.pointState" id="all" value="all">
-                  <label class="form-check-label" for="all">全部</label>
-                </div>
-
-                <div class="form-check form-check-inline">
-                  <input class="form-check-input" type="radio" v-model="filterDetail.pointState" id="add" value="add">
-                  <label class="form-check-label" for="add">補點</label>
-                </div>
-
-                <div class="form-check form-check-inline">
-                  <input class="form-check-input" type="radio" v-model="filterDetail.pointState" id="minus" value="minus">
-                  <label class="form-check-label" for="minus">扣點</label>
-                </div>
-              </div>
-            </div>
             <div class="form-group row">
               <div class="mr-2 col-2"></div>
               <div class="col-9">
@@ -87,19 +68,19 @@
                 <thead class="thead-dark">
                   <tr>
                     <th scope="col">No.</th>
-                    <th scope="col">補扣點時間</th>
-                    <th scope="col">事由</th>
-                    <th scope="col">點數紀錄</th>
-                    <th scope="col">主錢包餘額</th>
+                    <th scope="col">登入時間</th>
+                    <th scope="col">登入IP</th>
+                    <th scope="col">登入裝置</th>
+                    <th scope="col">狀態</th>
                   </tr>
                 </thead>
                 <tbody>
-                  <tr v-for="pointLog in userPointLogInPeriod" :key="pointLog.id">
-                    <th scope="row">{{ pointLog.id }}</th>
-                    <td>{{ pointLog.createdAt }}</td>
-                    <td>{{ pointLog.cause }}</td>
-                    <td>{{ pointLog.edit_point }}</td>
-                    <td>{{ pointLog.balance }}</td>
+                  <tr>
+                    <th scope="row"></th>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
                   </tr>
                 </tbody>
               </table>
@@ -119,15 +100,14 @@ defineProps({
     default: () => []
   }
 })
-const emit = defineEmits(['filterPointLogInPeriod'])
+const emit = defineEmits(['filterLogInInPeriod'])
 
 const filterDetail = reactive({
   startDate: '',
   endDate: '',
-  pointState:  'all',
 })
 
 const filterPointLogInPeriod = () => {
-  emit('filterPointLogInPeriod', {...filterDetail})
+  emit('filterLogInInPeriod', {...filterDetail})
 }
 </script>

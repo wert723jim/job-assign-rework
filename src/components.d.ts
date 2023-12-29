@@ -20,6 +20,8 @@ declare module 'vue' {
     AdminHeader: typeof import('./components/admin/Header.vue')['default']
     AdminHeaderWithSider: typeof import('./components/admin/HeaderWithSider.vue')['default']
     AdminLayout: typeof import('./components/admin/Layout.vue')['default']
+    AdminLogIn: typeof import('./components/admin/LogIn.vue')['default']
+    AdminLogInRecord: typeof import('./components/admin/LogInRecord.vue')['default']
     AdminMemberUserInfo: typeof import('./components/admin/MemberUserInfo.vue')['default']
     AdminModal: typeof import('./components/admin/Modal.vue')['default']
     AdminPointRecord: typeof import('./components/admin/PointRecord.vue')['default']

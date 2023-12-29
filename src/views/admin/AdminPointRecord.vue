@@ -1,288 +1,168 @@
 <template>
-  <AdminLayout>
-    <template v-slot:header>
-      <h2 class="font-semibold text-lg px-3 py-2">點數紀錄</h2>
-    </template>
-
+  <Layout>
     <template v-slot:content>
-      <div class="border-[1px] border-gray-300 mb-2">
-        <div class="px-6 py-2">
-          <div>
-            <form>
-              <table>
-                <tr>
-                  <td>
-                    查詢時間
-                  </td>
-                  <td>
-                    <label
-                      for="todayOption"
-                      class="bg-[#3FC0E5] text-white px-4 py-1 mr-2"
-                    >
-                      今日
-                    </label>
-                    <label
-                      for="yesterdayOption"
-                      class="bg-[#3FC0E5] text-white px-4 py-1 mr-2"
-                    >
-                      昨日
-                    </label>
-                    <label
-                      for="thisWeekOption"
-                      class="bg-[#3FC0E5] text-white px-4 py-1 mr-2"
-                    >
-                      本週
-                    </label>
-                    <label
-                      for="lastWeekOption"
-                      class="bg-[#3FC0E5] text-white px-4 py-1 mr-2"
-                    >
-                      上週
-                    </label>
-                    <label
-                      for="thisMonthOption"
-                      class="bg-[#3FC0E5] text-white px-4 py-1 mr-2"
-                    >
-                      本月
-                    </label>
-                    <label
-                      for="lastMonthOption"
-                      class="bg-[#3FC0E5] text-white px-4 py-1 mr-2"
-                    >
-                      上月
-                    </label>
-                  </td>
-                </tr>
-                <tr>
-                  <td>
-                    登入時間
-                  </td>
-                  <td>
-                    <div class="flex">
-                      <input type="datetime-local">
-                      <span> - </span>
-                      <input type="datetime-local">
+      <div class="pt-3 text-dark">
+        <div class="row mb-2">
+          <div class="col-10">
+            <div class="card">
+              <h5 class="card-header">登入查詢</h5>
+              <div class="card-body">
+              <form>
+                <div class="form-group row mb-2">
+                  <span class="col-form-label col-auto">日期區間</span>
+                  <div class="input-group col-9">
+                    <label class="sr-only" for="startDateTime"></label>
+                    <input type="datetime-local" class="form-control" id="startDateTime">
+                    <div class="input-group-prepend input-group-append">
+                      <label class="input-group-text">-</label>
                     </div>
-                  </td>
-                </tr>
-                <tr>
-                  <td>
-                    <label for="memberName">
-                      帳號/姓名
-                    </label>
-                  </td>
-                  <td>
-                    <input
-                      id="memberName"
-                      type="text"
-                      class="w-1/2 mr-2"
-                    >
-                    <label for="memberGroup">
-                      員工群組
-                    </label>
-                    <select
-                      name=""
-                      id="memberGroup"
-                    >
-                      <option
-                        value="0"
-                        selected
-                      >全部</option>
-                    </select>
-                  </td>
-                </tr>
-                <tr>
-                  <td>
-                    狀態
-                  </td>
-                  <td class="flex gap-4 items-center">
-                    <div>
-                      <input
-                        id="all"
-                        type="radio"
-                        name="state"
-                        value="all"
-                      >
-                      <label for="all">
-                        全部
-                      </label>
-                    </div>
-                    <div>
-                      <input
-                        id="addPoint"
-                        type="radio"
-                        name="state"
-                        value="add"
-                      >
-                      <label for="addPoint">
-                        補點
-                      </label>
-                    </div>
-                    <div>
-                      <input
-                        id="minusPoint"
-                        type="radio"
-                        name="state"
-                        value="minus"
-                      >
-                      <label for="minusPoint">
-                        扣點
-                      </label>
-                    </div>
-                    <div>
-                      <button class="bg-[#2055A5] text-white px-5 py-1">
-                        查詢
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-              </table>
-            </form>
-          </div>
-        </div>
-      </div>
+                    <label class="sr-only" for="endDateTime"></label>
+                    <input type="dateTime-local" class="form-control" id="endDateTime">
+                  </div>
+                </div>
 
-      <div>
-        <div class="bg-[#949DB0]">主錢包紀錄</div>
-        <div class="border-x-[1px] border-gray-300">
-          <div class="flex p-2">
-            共
-            <span>
-              220
-            </span>
-            筆資料，總頁數
-            <span>
-              5
-            </span>
-            頁 每頁筆數:
-            <div>
-              <select name="itemsCount">
-                <option
-                  value="50"
-                  selected
-                >50</option>
-              </select>
+                <div class="form-group row mb-2">
+                  <label for="memberInfo" class="col-form-label col-auto">帳號/姓名</label>
+                  <div class="col-auto">
+                    <input type="text" class="form-control">
+                  </div>
+                  <label for="memberInfo" class="col-form-label col-auto">員工群組</label>
+                  <div class="col-auto">
+                    <select name="" id="" class="form-control">
+                      <option value="">123</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  
+                </div>
+                <div class="form-group row mb-2 align-items-center">
+                  <span class="col-form-label col-auto">狀態</span>
+                  <div class="col-auto">
+                    <div class="form-check form-check-inline">
+                      <input class="form-check-input" type="radio" name="pointState" id="all">
+                      <label class="form-check-label" for="all">全部</label>
+                    </div>
+
+                    <div class="form-check form-check-inline">
+                      <input class="form-check-input" type="radio" name="pointState" id="add">
+                      <label class="form-check-label" for="add">補點</label>
+                    </div>
+
+                    <div class="form-check form-check-inline">
+                      <input class="form-check-input" type="radio" name="pointState" id="minus">
+                      <label class="form-check-label" for="minus">扣點</label>
+                    </div>
+                  </div>
+                </div>
+                <div class="form-group row">
+                  <div class="mr-2 col-2"></div>
+                  <div class="col-9">
+                    <button class="btn btn-primary">查詢</button>
+                  </div>
+                </div>
+              </form>
+              </div>
             </div>
-            目前第:
-            <div>
-              <select name="chosenPage">
-                <option
-                  value="1"
-                  selected
-                >1</option>
-              </select>
-            </div>
-            頁
           </div>
         </div>
-        <div>
-          <table class="filter-table w-full">
-            <thead>
-              <tr class="bg-[#7B7B7B] text-white">
-                <th>
-                  編號
-                </th>
-                <th>
-                  員工帳號
-                </th>
-                <th>
-                  姓名
-                </th>
-                <th>
-                  狀態
-                </th>
-                <th>
-                  群組
-                </th>
-                <th>
-                  點數紀錄
-                </th>
-                <th>
-                  主錢包餘額
-                </th>
-                <th>
-                  異動時間
-                </th>
-                <th class="w-1/4">
-                  事由
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>
-                  1
-                </td>
-                <td>
-                  DMP0001
-                </td>
-                <td>
-                  張三豐
-                </td>
-                <td>
-                  啟用
-                </td>
-                <td>
-                  新進
-                </td>
-                <td>
-                  +100
-                </td>
-                <td>
-                  1000.00
-                </td>
-                <td>
-                  <div>
-                    2023-12-16
+        <div class="row">
+          <div class="col-10">
+            <div class="card">
+              <h5 class="card-header">主錢包紀錄</h5>
+              <div class="card-body p-0">
+                <div>
+                  <div class="flex text-dark p-2">
+                    共
+                    <span>
+                      1
+                    </span>
+                    筆資料，總頁數
+                    <span>
+                      1
+                    </span>
+                    頁 每頁筆數:
+                    <div>
+                      <select name="itemsCount">
+                        <option value="10" selected>
+                          10
+                        </option>
+                      </select>
+                    </div>
+                    目前第:
+                    <div>
+                      <select name="chosenPage">
+                        <option>
+                          1
+                        </option>
+                      </select>
+                    </div>
+                    頁
                   </div>
-                  <div>
-                    12:00:02
-                  </div>
-                </td>
-                <td></td>
-              </tr>
-              <tr class="last-row">
-                <td colspan="3"></td>
-                <td colspan="2">
-                  <span class="inline-block py-3 tracking-[1em] w-full mr-[-1em]">
-                    總計
-                  </span>
-                </td>
-                <td>
-                  +100
-                </td>
-                <td colspan="2"></td>
-                <td></td>
-              </tr>
-            </tbody>
-          </table>
+                </div>
+                <div class="table-box">
+                  <table class="table">
+                    <thead class="thead-dark">
+                      <tr>
+                        <th scope="col">編號</th>
+                        <th scope="col">員工帳號</th>
+                        <th scope="col">姓名</th>
+                        <th scope="col">狀態</th>
+                        <th scope="col">群組</th>
+                        <th scope="col">點數紀錄</th>
+                        <th scope="col">主錢包餘額</th>
+                        <th scope="col">異動時間</th>
+                        <th scope="col">事由</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <th scope="row"></th>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                      </tr>
+                      <tr>
+                        <td colspan="3"></td>
+                        <td colspan="2" class="text-center">總計</td>
+                        <td>100</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </template>
-  </AdminLayout>
+  </Layout>
 </template>
 
-<style scoped>
-form tr td {
-  @apply py-1;
+<script setup>
+import Layout from '../../components/admin/Layout.vue'
+import fetchWithToken from '@utils/fetchFn.js'
+// import qs from 'qs'
+// /api/login-logs?filters[users]=14&filters[$and][0][createdAt][$gt]=2023-12-19T06:20:40Z&filters[$and][1][createdAt][$lt]=2023-12-19T08:50:00Z
+// const queryString = qs.stringify({
+//   fields: ['username', 'nickname', 'phone', 'main_point', 'createdAt', 'note', 'isActive'],
+//   populate: {
+//     group: {
+//       fields: ['name']
+//     },
+//     login_logs: true
+//   },
+//   sort: ['id'],
+//   // start: 2,
+//   // limit: 2
+// })
+const fetchMember = async () => {
+  const data = await fetchWithToken('/api/point-logs?filters[$or][0][username][$contains]={admin}')
+  console.log(data)
 }
-
-form tr td:first-child {
-  @apply text-right;
-  @apply pr-2;
-}
-
-form tr td input[type='text'],
-form tr td input[type='dateTime-local'] {
-  @apply border-[1px];
-  @apply border-gray-300;
-  @apply h-8;
-}
-
-.filter-table td,
-.filter-table th,
-.filter-table {
-  @apply border-[1px];
-  @apply border-gray-400;
-  @apply text-center;
-}</style>
+fetchMember()
+</script>

@@ -38,8 +38,14 @@
             v-show="chosenTab === 'bankAccount'">
           </Bank>
           <PointRecord
-            @filterPointLogInPeriod="filterPointLogInPeriod">
+            :user-point-log-in-period="userPointLogInPeriod"
+            @filterPointLogInPeriod="filterPointLogInPeriod"
+            v-show="chosenTab === 'pointRecord'">
           </PointRecord>
+          <LogInRecord
+            @filterLogInInPeriod="filterLogInInPeriod"
+            v-show="chosenTab === 'logInRecord'">  
+          </LogInRecord>
       </div>
       </div>
     </template>
@@ -52,6 +58,7 @@ import Layout from '../../components/admin/Layout.vue'
 import UserInfo from '../../components/admin/UserInfo.vue'
 import Bank from '../../components/admin/Bank.vue'
 import PointRecord from '../../components/admin/PointRecord.vue'
+import LogInRecord from '../../components/admin/LogInRecord.vue'
 import { ref, reactive } from 'vue'
 import { useRoute } from 'vue-router'
 import fetchWithToken from '@utils/fetchFn'
@@ -78,6 +85,8 @@ const userInfo = reactive({
 })
 const bankList = ref([])
 const cryptoAddressList = ref([])
+
+const userPointLogInPeriod = ref([])
 
 const chooseTab = (tabName) => {
   chosenTab.value = tabName
@@ -113,8 +122,35 @@ const fetchUserPointLog = async () => {
   Object.assign(pointLog, data)
 }
 
-const filterPointLogInPeriod = async () => {
-  const data = await fetchWithToken('/api/point-logs?filters[user]=14&filters[$and][0][createdAt][$gt]=2023-12-19T08:20:40Z&filters[$and][1][createdAt][$lt]=2023-12-19T08:50:00Z&filters[edit_point][$lt|$gt]=0')
+const filterPointLogInPeriod = async (formDetail) => {
+  let queryString = `filters[user]=${route.params.memberId}`
+  if (formDetail.startDate) {
+    queryString + `&filters[$and][0][createdAt][$gt]=${formDetail.startDate}`
+  }
+
+  if (formDetail.startDate && formDetail.endDate) {
+    queryString + `&filters[$and][1][createdAt][$lt]=${formDetail.endDate}`
+  }
+  // &filters[edit_point][$lt|$gt]=0
+  const { data } = await fetchWithToken(`/api/point-logs?${queryString}`)
+  userPointLogInPeriod.value = data.map((item) => ({
+    id: item.id,
+    ...item.attributes,
+  }))
+}
+
+const filterLogInInPeriod = async (formDetail) => {
+  console.log(formDetail)
+  let queryString = `filters[users]=${route.params.memberId}`
+  if (formDetail.startDate) {
+    queryString + `&filters[$and][0][createdAt][$gt]=${formDetail.startDate}`
+  }
+
+  if (formDetail.startDate && formDetail.endDate) {
+    queryString + `&filters[$and][1][createdAt][$lt]=${formDetail.endDate}`
+  }
+  // &filters[edit_point][$lt|$gt]=0
+  const { data } = await fetchWithToken(`/api/login-logs?${queryString}`)
   console.log(data)
 }
 
