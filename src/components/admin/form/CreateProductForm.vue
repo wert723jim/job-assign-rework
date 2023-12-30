@@ -66,7 +66,6 @@
 
 <script setup>
 import { reactive, onMounted } from 'vue'
-import { fetchUploadFileWithToken } from '@utils/fetchFn.js'
 const props = defineProps({
   productInfo: {
     type: Object,
@@ -105,19 +104,19 @@ const previewFile = (event) => {
   }
 }
 
-const upload = async () => {
-  const formData = new FormData()
-  formData.append('files', formDetail.files[0])
+// const upload = async () => {
+//   const formData = new FormData()
+//   formData.append('files', formDetail.files[0])
 
-  const fileId = await fetchUploadFileWithToken('/api/upload', formData)
-  console.log(formDetail)
-  console.log(fileId)
-  if (!fileId) {
-    console.log('image upload error')
-    return
-  }
-  console.log('upload success')
-}
+//   const file = await fetchUploadFileWithToken('/api/upload', formData)
+//   console.log(formDetail)
+//   console.log(file)
+//   if (!file) {
+//     console.log('image upload error')
+//     return
+//   }
+//   console.log('upload success')
+// }
 
 const confirmForm = () => {
   const { name } = formDetail

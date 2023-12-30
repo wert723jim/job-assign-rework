@@ -77,7 +77,7 @@ import { ref } from 'vue'
 import Layout from '../../components/admin/Layout.vue'
 import Modal from '../../components/admin/Modal.vue'
 import CreateProductForm from '../../components/admin/form/CreateProductForm.vue'
-import fetchWithToken from '@utils/fetchFn.js'
+import fetchWithToken, { fetchUploadFileWithToken } from '@utils/fetchFn.js'
 
 const products = ref([])
 const creatProductModal = ref(null)
@@ -113,10 +113,28 @@ const chooseProduct = (product) => {
 }
 
 const createProduct = async (formDetail) => {
-  delete formDetail['files']
-  const postBody = {
-    data: formDetail,
+  const formData = new FormData()
+  formData.append('files', formDetail.files[0])
+
+  const file = await fetchUploadFileWithToken('/api/upload', formData)
+
+  console.log(formDetail)
+  console.log(file)
+
+  if (!file) {
+    console.log('image upload error')
+    return
   }
+
+  delete formDetail['files']
+
+  const postBody = {
+    data: {
+      ...formDetail,
+      image: file[0].id,
+    },
+  }
+
   const { data } = await fetchWithToken('/api/products', 'POST', postBody)
   if (!data) {
     console.log('create product error')
@@ -132,9 +150,25 @@ const createProduct = async (formDetail) => {
 }
 
 const editProduct = async (formDetail) => {
+  const formData = new FormData()
+  formData.append('files', formDetail.files[0])
+
+  const file = await fetchUploadFileWithToken('/api/upload', formData)
+  
+  console.log(formDetail)
+  console.log(file)
+
+  if (!file) {
+    console.log('image upload error')
+    return
+  }
+
   delete formDetail['files']
   const putBody = {
-    data: formDetail,
+    data: {
+      ...formDetail,
+      image: file[0].id
+    },
   }
   const { data } = await fetchWithToken(`/api/products/${chosenProduct.id}`, 'PUT', putBody)
   if (!data) {
@@ -156,6 +190,7 @@ const editProduct = async (formDetail) => {
 }
 
 const removeProduct = async (productId) => {
+  if (!confirm('確定要刪除此商品?')) return
   const { data } = await fetchWithToken(`/api/products/${productId}`, 'DELETE')
   if (!data) {
     console.log('delete product error')
