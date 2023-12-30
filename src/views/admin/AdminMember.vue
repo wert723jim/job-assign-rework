@@ -125,11 +125,19 @@ const fetchUserPointLog = async () => {
 const filterPointLogInPeriod = async (formDetail) => {
   let queryString = `filters[user]=${route.params.memberId}`
   if (formDetail.startDate) {
-    queryString + `&filters[$and][0][createdAt][$gt]=${formDetail.startDate}`
+    queryString += `&filters[$and][0][createdAt][$gt]=${formDetail.startDate}`
   }
 
   if (formDetail.startDate && formDetail.endDate) {
-    queryString + `&filters[$and][1][createdAt][$lt]=${formDetail.endDate}`
+    queryString += `&filters[$and][1][createdAt][$lt]=${formDetail.endDate}`
+  }
+
+  if (formDetail.pointState === 'all') {
+    queryString += '&filters[$and][2][edit_point][$lt|$gt]=0'
+  } else if (formDetail.pointState === 'add') {
+    queryString += '&filters[$and][2][edit_point][$gt]=0'
+  } else {
+    queryString += '&filters[$and][2][edit_point][$lt]=0'
   }
   // &filters[edit_point][$lt|$gt]=0
   const { data } = await fetchWithToken(`/api/point-logs?${queryString}`)
