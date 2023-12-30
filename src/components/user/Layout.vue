@@ -16,5 +16,9 @@
 
 <script setup>
 import removeAdminCss from '@utils/removeAdminCss'
+import { watchEffect } from 'vue'
+watchEffect(() => {
+  console.log(document.head)
+})
 removeAdminCss()
 </script>

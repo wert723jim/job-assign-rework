@@ -21,6 +21,10 @@ import Header from './Header.vue'
 </script>
 
 <style>
+/* @import "./src/static/admin/css/main.css";
+@import "./src/static/admin/css/index.css";
+@import "./src/static/bootstrap/css/bootstrap.css"; */
+
 .content-wrapper {
   position: absolute;
   z-index: 100;
