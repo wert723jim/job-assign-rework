@@ -18,13 +18,34 @@
 <script setup>
 import Sider from './Sider.vue'
 import Header from './Header.vue'
+import { watchEffect } from 'vue'
+// import removeAdminCss from '@utils/removeAdminCss'
+
+watchEffect(() => {
+  // removeAdminCss()
+  console.log('admin watch effect')
+  const bootstrapCssFile = document.createElement('link')
+  bootstrapCssFile.rel = 'stylesheet'
+  bootstrapCssFile.href = '../../src/static/bootstrap/css/bootstrap.min.css'
+  bootstrapCssFile.className = 'admin-css'
+  document.head.appendChild(bootstrapCssFile)
+
+  const indexCssFile = document.createElement('link')
+  indexCssFile.rel = 'stylesheet'
+  indexCssFile.href = '../../src/static/admin/css/index.css'
+  indexCssFile.className = 'admin-css'
+  document.head.appendChild(indexCssFile)
+
+  const mainCssFile = document.createElement('link')
+  mainCssFile.rel = 'stylesheet'
+  mainCssFile.href = '../../src/static/admin/css/main.css'
+  mainCssFile.className = 'admin-css'
+  document.head.appendChild(mainCssFile)
+  console.log(document.head)
+})
 </script>
 
 <style>
-/* @import "./src/static/admin/css/main.css";
-@import "./src/static/admin/css/index.css";
-@import "./src/static/bootstrap/css/bootstrap.css"; */
-
 .content-wrapper {
   position: absolute;
   z-index: 100;
