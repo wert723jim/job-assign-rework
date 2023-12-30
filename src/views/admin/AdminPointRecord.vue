@@ -28,7 +28,8 @@
                 <label for="memberInfo" class="col-form-label col-auto">員工群組</label>
                 <div class="col-auto">
                   <select name="" id="" class="form-control" v-model="filterDetail.group">
-                    <option value="null">無</option>
+                    <option :value="null">無</option>
+                    <option :value="option.id" v-for="option in groupOptions" :key="option.id">{{ option.name }}</option>
                   </select>
                 </div>
               </div>
@@ -125,7 +126,13 @@
                 <td>{{ log.nickname }}</td>
                 <td>{{ log.isActive }}</td>
                 <td>{{ log.group }}</td>
-                <td>{{ log.edit_point }}</td>
+                <td 
+                  class="flex"
+                  :class="{'text-success': log.edit_point > 0, 'text-danger': log.edit_point < 0}">
+                  
+                  <span v-if="log.edit_point > 0">+</span>
+                  {{ log.edit_point }}
+                </td>
                 <td>{{ log.balance }}</td>
                 <td>{{ log.createdAt }}</td>
                 <td scope="row">{{ log.cause }}</td>
@@ -133,7 +140,12 @@
               <tr>
                 <td colspan="3"></td>
                 <td colspan="2" class="text-center">總計</td>
-                <td>100</td>
+                <td 
+                  class="flex"
+                  :class="{'text-success': totalPoints > 0, 'text-danger': totalPoints < 0}">
+                  <span v-if="totalPoints > 0">+</span>
+                  {{ totalPoints }}
+                </td>
                 <td></td>
                 <td></td>
                 <td></td>
@@ -147,7 +159,7 @@
 </template>
 
 <script setup>
-import { ref, reactive } from 'vue'
+import { ref, reactive, onMounted, computed } from 'vue'
 import Layout from '../../components/admin/Layout.vue'
 import fetchWithToken from '@utils/fetchFn.js'
 // import qs from 'qs'
@@ -171,12 +183,19 @@ const filterDetail = reactive({
   group: null,
   pointState: 'all',
 })
-
 const pointLogs = ref([])
+const groupOptions = ref([])
+
+const fetchGroupOptions = async () => {
+  const { data } = await fetchWithToken('/api/groups?fields[0]=name&fields[1]=isDefault')
+  groupOptions.value = data.map((group) => ({
+    id: group.id,
+    name: group.attributes.name,
+  }))
+}
 
 // GET /api/users?fields[0]=username&fields[1]=nickname&fields[2]=phone&fields[3]=main_point&fields[4]=createdAt&fields[5]=note&populate[group][fields]=name&populate[login_logs][sort]=createdAt%3Adesc&filters[$or][0][username][$contains]={"username"}&filters[$or][1][nickname][$contains]={"nickname"}&filters[$or][2][phone][$contains]={"phone"}
 const fetchMembers = async () => {
-  console.log(filterDetail)
   let queryString = ''
   if (filterDetail.startDate) {
     console.log('start')
@@ -188,20 +207,44 @@ const fetchMembers = async () => {
   }
 
   if (filterDetail.info) {
-    queryString += `&filters[$or][2][username][$contains]=${filterDetail.info}&filters[$or][3][nickname][$contains]=${filterDetail.info}`
+    queryString += `&filters[$or][2][user][username][$contains]=${filterDetail.info}&filters[$or][3][user][nickname][$contains]=${filterDetail.info}`
   }
-  console.log(queryString)
-  const { data } = await fetchWithToken(`/api/point-logs?${queryString}&populate=*`)
+
+  if (filterDetail.group) {
+    queryString += `&filters[user][group][id][$eq]=${filterDetail.group}`
+  }
+
+  if (filterDetail.pointState === 'all') {
+    queryString += '&filters[$and][4][edit_point][$lt|$gt]=0'
+  } else if (filterDetail.pointState === 'add') {
+    queryString += '&filters[$and][4][edit_point][$gt]=0'
+  } else {
+    queryString += '&filters[$and][4][edit_point][$lt]=0'
+  }
+
+  const { data } = await fetchWithToken(`/api/point-logs?populate[0]=user&populate[1]=user.group${queryString}`)
   pointLogs.value = data.map((item) => ({
     id: item.id,
     username: item.attributes.user.data?.attributes.username || '查無此人',
     nickname: item.attributes.user.data?.attributes.nickname || '查無此人',
     isActive: item.attributes.user.data?.attributes.isActive || '查無此人',
-    group: item.attributes.user.data?.attributes.group || '查無群組',
+    group: item.attributes.user.data?.attributes.group?.data.attributes.name || '查無群組',
     edit_point: item.attributes.edit_point,
     balance: item.attributes.balance,
     createdAt: item.attributes.createdAt,
     cause: item.attributes.cause,
   }))
 }
+
+const totalPoints = computed(() => {
+  let total = 0
+  pointLogs.value.forEach((log) => {
+    total += log.edit_point
+  })
+  return total
+})
+
+onMounted(() => {
+  fetchGroupOptions()
+})
 </script>
