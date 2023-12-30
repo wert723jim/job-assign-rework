@@ -1,16 +1,18 @@
 <template>
-  <Sider></Sider>
-  <main class="main">
-    <Header></Header>
-    <div class="content-wrapper">
+  <div id="app2">
+    <Sider></Sider>
+    <main class="main">
+      <Header></Header>
+      <div class="content-wrapper">
 
-      <body>
-        <main>
-          <slot name="content"></slot>
-        </main>
-      </body>
-    </div>
-  </main>
+        <body>
+          <main>
+            <slot name="content"></slot>
+          </main>
+        </body>
+      </div>
+    </main>
+  </div>
 </template>
 
 <script setup>
