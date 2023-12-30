@@ -132,7 +132,8 @@ const handleSubmit = async () => {
 
   if (data.user.isAdmin) {
     localStorage.setItem('token', data.jwt)
-    router.replace('/admin')
+    // router.replace('/admin')
+    location.href = '/admin'
     return
   }
 

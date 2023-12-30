@@ -1,5 +1,5 @@
 <template>
-  <button :class="`${bgColor} text-white px-4 py-1.5 rounded-full text-sm whitespace-nowrap`">
+  <button :class="`${bgColor} text-white px-4 py-1.5 !rounded-full text-sm whitespace-nowrap`">
     {{ props.text }}
   </button>
 </template>

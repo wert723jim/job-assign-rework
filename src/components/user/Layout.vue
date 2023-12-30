@@ -13,3 +13,8 @@
     </div>
   </div>
 </template>
+
+<script setup>
+import removeAdminCss from '@utils/removeAdminCss'
+removeAdminCss()
+</script>
