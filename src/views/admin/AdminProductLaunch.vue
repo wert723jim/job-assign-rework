@@ -113,7 +113,7 @@ const chooseProduct = (product) => {
 }
 
 const createProduct = async (formDetail) => {
-  delete formDetail['image']
+  delete formDetail['files']
   const postBody = {
     data: formDetail,
   }
@@ -132,7 +132,7 @@ const createProduct = async (formDetail) => {
 }
 
 const editProduct = async (formDetail) => {
-  delete formDetail['image']
+  delete formDetail['files']
   const putBody = {
     data: formDetail,
   }

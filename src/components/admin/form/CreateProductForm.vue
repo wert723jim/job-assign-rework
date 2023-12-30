@@ -24,11 +24,13 @@
         <input type="text" class="form-control" id="productUrl" v-model="formDetail.url">
       </div>
       <div class="form-group">
-        <label for="group">上傳圖片: </label>
+        <label for="productImgUpload">上傳圖片: </label>
         <small>(建議大小500px*500px，不超過1.5MB)</small>
         <div class="w-50">
-          <img src="" alt="">
+          <img :src="productImgPreview" alt="">
         </div>
+        <input type="file" id="productImgUpload" ref="uploadInput" @change="previewFile">
+        <button @click.prevent.stop="upload">上傳</button>
       </div>
       <button type="submit" class="btn btn-primary">確認</button>
     </form>
@@ -37,6 +39,7 @@
 
 <script setup>
 import { reactive, onMounted } from 'vue'
+import fetchWithToken from '@utils/fetchFn.js'
 const props = defineProps({
   productInfo: {
     type: Object,
@@ -45,7 +48,7 @@ const props = defineProps({
       isDisplay: false,
       isOpen: false,
       url: '',
-      image: '',
+      files: [],
     })
   }
 })
@@ -60,8 +63,32 @@ const formDetail = reactive({
   isDisplay: false,
   isOpen: false,
   url: '',
-  image: '',
+  files: [],
 })
+const productImgPreview = ref('')
+
+const previewFile = (event) => {
+  const files = event.target.files
+  formDetail.files = files
+  if(files.length === 0) {
+    productImgPreview.value = ''
+  }else {
+    const imageURL = window.URL.createObjectURL(files[0])
+    productImgPreview.value = imageURL
+  }
+}
+
+const upload = async () => {
+  const fileId = await fetchWithToken('/api/upload', 'POST', {
+    files: formDetail.files
+  })
+  console.log(formDetail.files)
+  console.log(fileId)
+  if(!fileId) {
+    console.log('image upload error')
+    return
+  }
+}
 
 const confirmForm = () => {
   const { name } = formDetail
