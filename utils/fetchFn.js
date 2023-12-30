@@ -37,5 +37,26 @@ export async function fetchWithoutToken(url, method = 'GET', body = undefined) {
     }
 }
 
+export async function fetchUploadFileWithToken(url, formData) {
+    const baseUrl = import.meta.env.VITE_BACKEND_HOST
+    const token = getToken()
 
+    if (!formData) {
+        throw new Error('請輸入files formData')
+    }
+
+    try {
+        const res = await fetch(baseUrl + url, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+            method: 'POST',
+            body: formData
+        })
+        return await res.json()
+    } catch (err) {
+        console.log('fetch error', url)
+        console.log(err)
+    }
+}
 
