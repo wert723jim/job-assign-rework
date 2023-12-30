@@ -1,7 +1,7 @@
 <template>
   <nav>
     <div class="logo">
-      <h4>BsAdmin</h4>
+      <h4>管理後台</h4>
     </div>
     <ul class="menu">
       <SiderList v-for="item in menu" :key="item.name" :menuItem="item"></SiderList>
