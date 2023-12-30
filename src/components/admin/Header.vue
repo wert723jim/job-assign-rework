@@ -1,10 +1,10 @@
 <template>
   <header>
-    <div class="dropdown float-right">
+    <div class="dropdown float-right flex">
 
 
       <button
-        class="btn  btn-sm  dropdown-toggle d-flex items-center"
+        class="btn  btn-sm  d-flex items-center"
         type="button"
         id="dropdownMenu2"
         data-toggle="dropdown"
@@ -27,17 +27,17 @@
         <!--可以使用图片,大小20,class='rounded-circle'-->
         {{ nickname }}
       </button>
+      <a
+        class="dropdown-item cursor-pointer"
+        @click.stop.prevent="logout"
+      >登出</a>
 
 
-      <div
+      <!-- <div
         class="dropdown-menu dropdown-menu-right"
         aria-labelledby="dropdownMenu2"
       >
-        <a
-          class="dropdown-item cursor-pointer"
-          @click.stop.prevent="logout"
-        >登出</a>
-      </div>
+      </div> -->
     </div>
   </header>
 </template>
