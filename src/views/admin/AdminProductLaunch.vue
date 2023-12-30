@@ -151,6 +151,8 @@ const editProduct = async (formDetail) => {
     }
     return product
   })
+
+  editProductModal.value.modalClose()
 }
 
 const removeProduct = async (productId) => {
