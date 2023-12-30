@@ -7,7 +7,7 @@
       </div>
       <div class="form-group">
         <label for="announcementContent">公告內容: </label>
-        <textarea name="" id="announcementContent" class="form-control" v-model="formDetail.content"></textarea>
+        <textarea name="" id="announcementContent" class="form-control" rows="10" v-model="formDetail.content"></textarea>
       </div>
       <div class="form-group">
         <label for="announcementIsActive">公告狀態: </label>

@@ -49,7 +49,7 @@
                   {{ announcement.title }}
                 </td>
                 <td>
-                  {{ announcement.content }}
+                  {{ contentSubString(announcement.content) }}
                 </td>
                 <td>
                   <span class="badge-success badge-pill rounded-lg" v-if="announcement.isActive">啟用</span>
@@ -156,6 +156,11 @@ const removeAnnouncement = async (announcement) => {
   }
 
   announcements.value = announcements.value.filter((item) => item.id !== data.id)
+}
+
+const contentSubString = (content) => {
+  if (content.length < 40) return content
+  return content.substring(0, 40) + '...'
 }
 
 fetchannouncements()

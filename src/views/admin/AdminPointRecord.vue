@@ -135,7 +135,7 @@
                 </td>
                 <td>{{ log.balance }}</td>
                 <td>{{ log.createdAt }}</td>
-                <td scope="row">{{ log.cause }}</td>
+                <td scope="row">{{ contentSubString(log.cause) }}</td>
               </tr>
               <tr>
                 <td colspan="3"></td>
@@ -243,6 +243,11 @@ const totalPoints = computed(() => {
   })
   return total
 })
+
+const contentSubString = (content) => {
+  if (content.length < 40) return content
+  return content.substring(0, 40) + '...'
+}
 
 onMounted(() => {
   fetchGroupOptions()
