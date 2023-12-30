@@ -59,7 +59,7 @@
                   <span class="badge-success badge-pill rounded-lg" v-if="announcement.isMarquee">啟用</span>
                   <span class="badge-danger badge-pill rounded-lg" v-else>停用</span>
                 </td>
-                <td>
+                <td class="flex">
                   <button class="btn btn-primary" @click="chooseAnnouncement(announcement)">修改</button>
                   <button class="btn btn-danger" @click="removeAnnouncement(announcement)">刪除</button>
                 </td>
