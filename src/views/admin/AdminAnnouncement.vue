@@ -52,10 +52,12 @@
                   {{ announcement.content }}
                 </td>
                 <td>
-                  {{ announcement.isActive }}
+                  <span class="badge-success badge-pill rounded-lg" v-if="announcement.isActive">啟用</span>
+                  <span class="badge-danger badge-pill rounded-lg" v-else>停用</span>
                 </td>
                 <td>
-                  {{ announcement.isMarquee }}
+                  <span class="badge-success badge-pill rounded-lg" v-if="announcement.isMarquee">啟用</span>
+                  <span class="badge-danger badge-pill rounded-lg" v-else>停用</span>
                 </td>
                 <td>
                   <button class="btn btn-primary" @click="chooseAnnouncement(announcement)">修改</button>
@@ -155,56 +157,6 @@ const removeAnnouncement = async (announcement) => {
 
   announcements.value = announcements.value.filter((item) => item.id !== data.id)
 }
-
-// const createProduct = async (formDetail) => {
-//   delete formDetail['image']
-//   const postBody = {
-//     data: formDetail,
-//   }
-//   const { data } = await fetchWithToken('/api/products', 'POST', postBody)
-//   if (!data) {
-//     console.log('create product error')
-//     return
-//   }
-
-//   products.value.push({
-//     id: data.id,
-//     ...data.attributes,
-//   })
-
-//   creatProductModal.value.modalClose()
-// }
-
-// const editProduct = async (formDetail) => {
-//   delete formDetail['image']
-//   const putBody = {
-//     data: formDetail,
-//   }
-//   const { data } = await fetchWithToken(`/api/products/${chosenProduct.id}`, 'PUT', putBody)
-//   if (!data) {
-//     console.log('edit product error')
-//     return
-//   }
-
-//   products.value = products.value.map((product) => {
-//     if(product.id === data.id) {
-//       return {
-//         id: data.id,
-//         ...data.attributes,
-//       }
-//     }
-//     return product
-//   })
-// }
-
-// const removeProduct = async (productId) => {
-//   const { data } = await fetchWithToken(`/api/products/${productId}`, 'DELETE')
-//   if (!data) {
-//     console.log('delete product error')
-//     return
-//   }
-//   products.value = products.value.filter((product) => product.id !== productId)
-// }
 
 fetchannouncements()
 </script>
