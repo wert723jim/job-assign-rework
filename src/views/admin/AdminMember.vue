@@ -151,11 +151,11 @@ const filterLogInInPeriod = async (formDetail) => {
   console.log(formDetail)
   let queryString = `filters[users]=${route.params.memberId}`
   if (formDetail.startDate) {
-    queryString + `&filters[$and][0][createdAt][$gt]=${formDetail.startDate}`
+    queryString += `&filters[$and][0][createdAt][$gt]=${formDetail.startDate}`
   }
 
   if (formDetail.startDate && formDetail.endDate) {
-    queryString + `&filters[$and][1][createdAt][$lt]=${formDetail.endDate}`
+    queryString += `&filters[$and][1][createdAt][$lt]=${formDetail.endDate}`
   }
   // &filters[edit_point][$lt|$gt]=0
   const { data } = await fetchWithToken(`/api/login-logs?${queryString}`)

@@ -1,6 +1,6 @@
 <template>
   <div class="pt-3 text-dark">
-    <div class="row">
+    <div class="row mb-2">
       <div class="col-10">
         <div class="card">
           <h5 class="card-header">登入查詢</h5>
@@ -34,7 +34,7 @@
         <div class="card">
           <h5 class="card-header">主錢包紀錄</h5>
           <div class="card-body p-0">
-            <div>
+            <!-- <div>
               <div class="flex text-dark p-2">
                 共
                 <span>
@@ -62,7 +62,7 @@
                 </div>
                 頁
               </div>
-            </div>
+            </div> -->
             <div class="table-box">
               <table class="table">
                 <thead class="thead-dark">
