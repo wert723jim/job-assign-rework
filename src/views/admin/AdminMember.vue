@@ -227,6 +227,7 @@ const addCryptoAddress = async (cryptoAddress) => {
 }
 
 const removeBank = async (bankId) => {
+  if (!confirm('確定要刪除此銀行?')) return
   const { data } = await fetchWithToken(`/api/banks/${bankId}`, 'DELETE')
   if (!data) {
     console.log('remove bank error')
@@ -236,6 +237,7 @@ const removeBank = async (bankId) => {
 }
 
 const removeCryptoAddress = async (addressId) => {
+  if (!confirm('確定要刪除此錢包地址?')) return
   const { data } = await fetchWithToken(`/api/cryptos/${addressId}`, 'DELETE')
 
   if (!data) {
