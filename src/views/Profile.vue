@@ -53,6 +53,9 @@
             disabled
           >
         </div>
+        <div class="pt-2">
+          <span class="text-sm mt-10 text-[#9B9B9B]">若需修改個人資料請洽客服人員</span>
+        </div>
       </form>
     </div>
   </UserLayout>

@@ -4,8 +4,14 @@
     @click="handleClick"
   >
     <img
+      v-if="imageUrl"
       :src="imageUrl"
       alt="product img"
+    >
+    <img
+      v-else
+      src="@/assets/default-image.png"
+      alt=""
     >
     <div class="absolute flex flex-col gap-3 mb-10">
       <span class="text-white font-extralight text-center">{{ props.product.attributes.name }}</span>
@@ -24,8 +30,7 @@ const connectCustomService = inject('connectCustomService')
 
 const props = defineProps(['product'])
 
-const imageUrl = props.product.attributes.image.data.attributes.url
-
+const imageUrl = props.product.attributes.image.data?.attributes.url
 const handleClick = () => {
   if (props.product.attributes.url) {
     window.open(props.product.attributes.url)
