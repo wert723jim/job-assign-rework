@@ -47,7 +47,7 @@
           </button>
         </div>
 
-        <div>
+        <!-- <div>
           <div class="flex text-dark p-2">
             共
             <span>
@@ -75,7 +75,7 @@
             </div>
             頁
           </div>
-        </div>
+        </div> -->
 
         <div class="table-box">
           <table class="table">
