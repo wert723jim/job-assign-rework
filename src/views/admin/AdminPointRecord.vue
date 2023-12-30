@@ -67,40 +67,40 @@
         </div>
 
 
-            <div class="card">
-              <h5 class="card-header">主錢包紀錄</h5>
-              <div class="card-body p-0">
+        <div class="card">
+          <h5 class="card-header">主錢包紀錄</h5>
+          <div class="card-body p-0">
+            <!-- <div>
+              <div class="flex text-dark p-2">
+                共
+                <span>
+                  1
+                </span>
+                筆資料，總頁數
+                <span>
+                  1
+                </span>
+                頁 每頁筆數:
                 <div>
-                  <div class="flex text-dark p-2">
-                    共
-                    <span>
-                      1
-                    </span>
-                    筆資料，總頁數
-                    <span>
-                      1
-                    </span>
-                    頁 每頁筆數:
-                    <div>
-                      <select name="itemsCount">
-                        <option value="10" selected>
-                          10
-                        </option>
-                      </select>
-                    </div>
-                    目前第:
-                    <div>
-                      <select name="chosenPage">
-                        <option>
-                          1
-                        </option>
-                      </select>
-                    </div>
-                    頁
-                  </div>
+                  <select name="itemsCount">
+                    <option value="10" selected>
+                      10
+                    </option>
+                  </select>
                 </div>
+                目前第:
+                <div>
+                  <select name="chosenPage">
+                    <option>
+                      1
+                    </option>
+                  </select>
+                </div>
+                頁
               </div>
-            </div>
+            </div> -->
+          </div>
+        </div>
 
 
         <div class="table-box">
