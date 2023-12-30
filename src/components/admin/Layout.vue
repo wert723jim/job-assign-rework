@@ -26,19 +26,19 @@ watchEffect(() => {
   console.log('admin watch effect')
   const bootstrapCssFile = document.createElement('link')
   bootstrapCssFile.rel = 'stylesheet'
-  bootstrapCssFile.href = '../../src/static/bootstrap/css/bootstrap.min.css'
+  bootstrapCssFile.href = '/src/static/bootstrap/css/bootstrap.min.css'
   bootstrapCssFile.className = 'admin-css'
   document.head.appendChild(bootstrapCssFile)
 
   const indexCssFile = document.createElement('link')
   indexCssFile.rel = 'stylesheet'
-  indexCssFile.href = '../../src/static/admin/css/index.css'
+  indexCssFile.href = '/src/static/admin/css/index.css'
   indexCssFile.className = 'admin-css'
   document.head.appendChild(indexCssFile)
 
   const mainCssFile = document.createElement('link')
   mainCssFile.rel = 'stylesheet'
-  mainCssFile.href = '../../src/static/admin/css/main.css'
+  mainCssFile.href = '/src/static/admin/css/main.css'
   mainCssFile.className = 'admin-css'
   document.head.appendChild(mainCssFile)
   console.log(document.head)
