@@ -187,41 +187,39 @@ const addBank = async (bankDetail) => {
       user: route.params.memberId,
     }
   }
-  const data = await fetchWithToken('/api/banks', 'POST', postBody)
+  const { data } = await fetchWithToken('/api/banks', 'POST', postBody)
+
   if( !data ) {
     console.log('add bank error')
     return
   }
   bankList.value.push({
+    id: data.id,
     ...bankDetail,
   })
 }
 
 const addCryptoAddress = async (cryptoAddress) => {
-  if (!cryptoAddress) {
-    console.log('虛擬錢包位址欄位不得為空')
-    return
-  }
   const postBody = {
     data: {
       address: cryptoAddress,
       user: route.params.memberId
     }
   }
-  const data = await fetchWithToken('/api/cryptos', 'POST', postBody)
+  const { data } = await fetchWithToken('/api/cryptos', 'POST', postBody)
   if (!data) {
     console.log('add crypto address error')
     return
   }
 
   cryptoAddressList.value.push({
+    id: data.id,
     address: cryptoAddress,
   })
 }
 
 const removeBank = async (bankId) => {
-  const data = await fetchWithToken(`/api/banks/${bankId}`, 'DELETE')
-
+  const { data } = await fetchWithToken(`/api/banks/${bankId}`, 'DELETE')
   if (!data) {
     console.log('remove bank error')
     return
@@ -230,7 +228,7 @@ const removeBank = async (bankId) => {
 }
 
 const removeCryptoAddress = async (addressId) => {
-  const data = await fetchWithToken(`/api/cryptos/${addressId}`, 'DELETE')
+  const { data } = await fetchWithToken(`/api/cryptos/${addressId}`, 'DELETE')
 
   if (!data) {
     console.log('remove crypto address error')

@@ -71,7 +71,7 @@ const handleDeleteCrypto = async (cryptoId) => {
     <div class="row row-cols-2 mb-2">
       <div class="col-6">
         <div class="card">
-          <h5 class="card-header">更改銀行資料</h5>
+          <h5 class="card-header">新增銀行資料</h5>
           <div class="card-body">
             <form @submit.stop.prevent="addBank">
               <div class="form-group row mb-2">
@@ -191,12 +191,21 @@ const bankDetail = reactive({
 const cryptoAddress = ref('')
 const emit = defineEmits(['addBank', 'addCryptoAddress', 'removeBank', 'removeCryptoAddress'])
 const addBank = () => {
+  const { branch_name, account, account_name} = bankDetail
+  if (!branch_name || !account || !account_name) {
+    console.log('欄位不得為空')
+    return
+  }
   emit('addBank', {...bankDetail})
   return
 }
 
 const addCryptoAddress = () => {
   cryptoAddress.value = cryptoAddress.value.trim()
+  if (!cryptoAddress.value) {
+    console.log('虛擬錢包位址欄位不得為空')
+    return
+  }
   emit('addCryptoAddress', cryptoAddress.value)
 }
 
