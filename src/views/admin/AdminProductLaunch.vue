@@ -52,13 +52,15 @@
                   {{ product.createdAt }}
                 </td>
                 <td>
-                  {{ product.isDisplay }}
+                  <span class="badge-success badge-pill rounded-lg" v-if="product.isDisplay">顯示</span>
+                  <span class="badge-danger badge-pill rounded-lg" v-else>隱藏</span>
                 </td>
                 <td>
-                  {{ product.isOpen }}
+                  <span class="badge-success badge-pill rounded-lg" v-if="product.isOpen">啟用</span>
+                  <span class="badge-danger badge-pill rounded-lg" v-else>停用</span>
                 </td>
                 <td>
-                  <button class="btn btn-primary" @click="chooseProduct(product)">修改</button>
+                  <button  class="btn btn-primary mr-1" @click="chooseProduct(product)">修改</button>
                   <button class="btn btn-danger" @click="removeProduct(product.id)">刪除</button>
                 </td>
               </tr>

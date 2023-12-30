@@ -9,7 +9,7 @@
         <label for="productIsDisplay">發布狀態: </label>
         <select id="productIsDisplay" v-model="formDetail.isDisplay">
           <option :value="true">顯示</option>
-          <option :value="false">下架</option>
+          <option :value="false">隱藏</option>
         </select>
       </div>
       <div class="form-group">
