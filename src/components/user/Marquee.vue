@@ -25,7 +25,7 @@ onMounted(async () => {
   const baseUrl = import.meta.env.VITE_BACKEND_HOST
   const res = await fetch(baseUrl + '/api/announcements?fields[0]=title')
   const { data } = await res.json()
-  announcementList.value = [...Array(100).fill(...data)]
+  announcementList.value = [...Array(100).fill([...data])].flat()
   gsap.to(marquee.value, {
     x: -1000,
     duration: 24,
