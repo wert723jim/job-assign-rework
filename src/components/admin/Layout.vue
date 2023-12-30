@@ -18,33 +18,37 @@
 <script setup>
 import Sider from './Sider.vue'
 import Header from './Header.vue'
-import { watchEffect } from 'vue'
+// import { watchEffect } from 'vue'
 // import removeAdminCss from '@utils/removeAdminCss'
 
-watchEffect(() => {
-  // removeAdminCss()
-  console.log('admin watch effect')
-  const bootstrapCssFile = document.createElement('link')
-  bootstrapCssFile.rel = 'stylesheet'
-  bootstrapCssFile.href = '/src/public/bootstrap/css/bootstrap.min.css'
-  bootstrapCssFile.className = 'admin-css'
-  document.body.appendChild(bootstrapCssFile)
+// watchEffect(() => {
+//   // removeAdminCss()
+//   console.log('admin watch effect')
+//   const bootstrapCssFile = document.createElement('link')
+//   bootstrapCssFile.rel = 'stylesheet'
+//   bootstrapCssFile.href = '/src/public/bootstrap/css/bootstrap.min.css'
+//   bootstrapCssFile.className = 'admin-css'
+//   document.body.appendChild(bootstrapCssFile)
 
-  const indexCssFile = document.createElement('link')
-  indexCssFile.rel = 'stylesheet'
-  indexCssFile.href = '/src/public/admin/css/index.css'
-  indexCssFile.className = 'admin-css'
-  document.body.appendChild(indexCssFile)
+//   const indexCssFile = document.createElement('link')
+//   indexCssFile.rel = 'stylesheet'
+//   indexCssFile.href = '/src/public/admin/css/index.css'
+//   indexCssFile.className = 'admin-css'
+//   document.body.appendChild(indexCssFile)
 
-  const mainCssFile = document.createElement('link')
-  mainCssFile.rel = 'stylesheet'
-  mainCssFile.href = '/src/public/admin/css/main.css'
-  mainCssFile.className = 'admin-css'
-  document.body.appendChild(mainCssFile)
-})
+//   const mainCssFile = document.createElement('link')
+//   mainCssFile.rel = 'stylesheet'
+//   mainCssFile.href = '/src/public/admin/css/main.css'
+//   mainCssFile.className = 'admin-css'
+//   document.body.appendChild(mainCssFile)
+// })
 </script>
 
 <style>
+@import '@/static/admin/css/main.css';
+@import '@/static/admin/css/index.css';
+@import '@/static/bootstrap/css/bootstrap.min.css';
+
 .content-wrapper {
   position: absolute;
   z-index: 100;

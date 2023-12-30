@@ -56,7 +56,7 @@ if (!token) {
 
 const logout = () => {
   localStorage.setItem('token', '')
-  router.push('/')
+  location.href = '/'
 }
 
 onMounted(async () => {
