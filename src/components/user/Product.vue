@@ -7,6 +7,7 @@
       v-if="imageUrl"
       :src="imageUrl"
       alt="product img"
+      class="object-contain w-[300px] h-[300px]"
     >
     <img
       v-else

@@ -13,13 +13,6 @@ import { ref } from 'vue'
 import SiderList from './SiderList.vue'
 const menu = ref([
   {
-    name: '首頁',
-    icon: '&#xe6a2;',
-    url: 'main.html',
-    hidden: false,
-    list: []
-  },
-  {
     name: '員工',
     icon: '&#xe6e0;',
     url: '#',

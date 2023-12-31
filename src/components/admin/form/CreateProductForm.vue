@@ -41,11 +41,13 @@
       </div>
       <div class="form-group">
         <label for="productImgUpload">上傳圖片: </label>
-        <small>(建議大小500px*500px，不超過1.5MB)</small>
+        <small>(建議大小300px*300px，不超過1.5MB)</small>
         <div class="w-50">
           <img
             :src="productImgPreview"
             alt=""
+            class="object-contain"
+            style="max-width: 300px; max-height: 300px"
           >
         </div>
         <input
@@ -54,9 +56,17 @@
           ref="uploadInput"
           @change="previewFile"
         >
-        <button @click.prevent.stop="upload">上傳</button>
+        <!-- <button @click.prevent.stop="upload">上傳</button> -->
       </div>
       <button
+        class="ml-10 mb-10"
+        disabled
+        v-if="isSubmitBtnLoading"
+      >
+        <FadeLoader color="#000" />
+      </button>
+      <button
+        v-else
         type="submit"
         class="btn btn-primary"
       >確認</button>
@@ -66,16 +76,23 @@
 
 <script setup>
 import { reactive, onMounted } from 'vue'
+import { useToast } from 'vue-toast-notification'
+import { FadeLoader } from 'vue3-spinner'
+const $toast = useToast()
+
 const props = defineProps({
   productInfo: {
     type: Object,
     default: () => ({
       name: '',
-      isDisplay: false,
-      isOpen: false,
+      isDisplay: true,
+      isOpen: true,
       url: '',
       files: [],
     })
+  },
+  isSubmitBtnLoading: {
+    type: Boolean,
   }
 })
 const emit = defineEmits(['confirmForm'])
@@ -86,12 +103,12 @@ onMounted(() => {
 
 const formDetail = reactive({
   name: '',
-  isDisplay: false,
-  isOpen: false,
+  isDisplay: true,
+  isOpen: true,
   url: '',
   files: [],
 })
-const productImgPreview = ref('')
+const productImgPreview = ref(props.productInfo.image)
 
 const previewFile = (event) => {
   const files = event.target.files
@@ -121,7 +138,8 @@ const previewFile = (event) => {
 const confirmForm = () => {
   const { name } = formDetail
   if (!name) {
-    console.log('欄位不得為空')
+    console.log('商品名稱不得為空')
+    $toast.error('商品名稱不得為空')
     return
   }
   emit('confirmForm', { ...formDetail })
