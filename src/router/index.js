@@ -34,7 +34,7 @@ const routes = [
   {
     path: '/admin',
     name: 'admin login',
-    component: () => import('../views/admin/login.vue')
+    component: () => import('../views/admin/Login.vue')
   },
   {
     path: '/admin/memberGroup',
