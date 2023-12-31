@@ -16,7 +16,7 @@
     <div
       v-if="productList === null || productList.length === 0"
       class="text-gray-400 text-center"
-    >沒有商品 {{ productList?.length }}</div>
+    >沒有商品</div>
   </UserLayout>
 </template>
 
