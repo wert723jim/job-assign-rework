@@ -131,10 +131,12 @@ const handleSubmit = async () => {
   }
 
   if (data.user.isAdmin) {
-    localStorage.setItem('token', data.jwt)
-    // router.replace('/admin')
-    location.href = '/admin'
+    error.returnError = '帳號或密碼錯誤'
     return
+    // localStorage.setItem('token', data.jwt)
+    // // router.replace('/admin')
+    // location.href = '/admin'
+    // return
   }
 
   if (data.user.id) {
@@ -151,7 +153,7 @@ onMounted(() => {
   generateCaptcha()
 })
 function generateCaptcha() {
-  const chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXTZabcdefghiklmnopqrstuvwxyz'
+  const chars = '0123456789'
   const string_length = 5
 
   let captchaCode = ''
