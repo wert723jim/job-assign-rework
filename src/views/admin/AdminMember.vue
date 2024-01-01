@@ -75,6 +75,7 @@
           </PointRecord>
           <LogInRecord
             @filterLogInInPeriod="filterLogInInPeriod"
+            :userLoginLogPeriod="userLoginLogPeriod"
             v-show="chosenTab === 'logInRecord'"
           >
           </LogInRecord>
@@ -173,15 +174,14 @@ const filterPointLogInPeriod = async (formDetail) => {
   }
   // &filters[edit_point][$lt|$gt]=0
   const { data } = await fetchWithToken(`/api/point-logs?${queryString}`)
-  console.log(data)
   userPointLogInPeriod.value = data.map((item) => ({
     id: item.id,
     ...item.attributes,
   }))
 }
 
+const userLoginLogPeriod = ref([])
 const filterLogInInPeriod = async (formDetail) => {
-  console.log(formDetail)
   let queryString = `filters[users]=${route.params.memberId}`
   if (formDetail.startDate) {
     queryString += `&filters[$and][0][createdAt][$gt]=${formDetail.startDate}`
@@ -191,8 +191,11 @@ const filterLogInInPeriod = async (formDetail) => {
     queryString += `&filters[$and][1][createdAt][$lt]=${formDetail.endDate}`
   }
   // &filters[edit_point][$lt|$gt]=0
-  const { data } = await fetchWithToken(`/api/login-logs?${queryString}`)
-  console.log(data)
+  const { data } = await fetchWithToken(`/api/login-logs?${queryString}&sort[createdAt]=desc`)
+  userLoginLogPeriod.value = data.map((item) => ({
+    id: item.id,
+    ...item.attributes,
+  }))
 }
 
 const editMember = async (userInfoDetail) => {

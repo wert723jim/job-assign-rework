@@ -85,7 +85,7 @@
 </template>
 
 <script setup>
-import { fetchWithoutToken } from '@utils/fetchFn'
+import fetchWithToken, { fetchWithoutToken } from '@utils/fetchFn'
 
 const fieldGroupClass = 'flex flex-col mt-8 justify-center'
 const inputClass = 'border rounded-md w-[330px] outline-primary h-10 px-2 mt-2'
@@ -142,7 +142,22 @@ const handleSubmit = async () => {
   if (data.user.id) {
     localStorage.setItem('token', data.jwt)
     router.replace('/')
+    createLoginLog(data.user.id)
   }
+}
+
+const createLoginLog = async (userId) => {
+  const response = await fetch('https://api.ipify.org?format=json')
+  const ipData = await response.json()
+  const data = await fetchWithToken('/api/login-logs', 'POST', {
+    data: {
+      ip: ipData.ip,
+      device: /Android|webOS|iPhone|iPod|BlackBerry/i.test(navigator.userAgent) ? 'mobile' : 'desktop',
+      isSuccess: true,
+      users: userId
+    }
+  })
+  console.log(data)
 }
 
 onMounted(() => {

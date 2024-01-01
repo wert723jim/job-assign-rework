@@ -5,26 +5,45 @@
         <div class="card">
           <h5 class="card-header">登入查詢</h5>
           <div class="card-body">
-           <form>
-            <div class="form-group row mb-2">
-              <span class="col-form-label mr-2 col-2">日期區間</span>
-              <div class="input-group col-9">
-                <label class="sr-only" for="startDateTime"></label>
-                <input type="datetime-local" class="form-control" id="startDateTime" v-model="filterDetail.startDate">
-                <div class="input-group-prepend input-group-append">
-                  <label class="input-group-text">-</label>
+            <form>
+              <div class="form-group row mb-2">
+                <span class="col-form-label mr-2 col-2">日期區間</span>
+                <div class="input-group col-9">
+                  <label
+                    class="sr-only"
+                    for="startDateTime"
+                  ></label>
+                  <input
+                    type="datetime-local"
+                    class="form-control"
+                    id="startDateTime"
+                    v-model="filterDetail.startDate"
+                  >
+                  <div class="input-group-prepend input-group-append">
+                    <label class="input-group-text">-</label>
+                  </div>
+                  <label
+                    class="sr-only"
+                    for="endDateTime"
+                  ></label>
+                  <input
+                    type="dateTime-local"
+                    class="form-control"
+                    id="endDateTime"
+                    v-model="filterDetail.endDate"
+                  >
                 </div>
-                <label class="sr-only" for="endDateTime"></label>
-                <input type="dateTime-local" class="form-control" id="endDateTime" v-model="filterDetail.endDate">
               </div>
-            </div>
-            <div class="form-group row">
-              <div class="mr-2 col-2"></div>
-              <div class="col-9">
-                <button class="btn btn-primary" @click.stop.prevent="filterPointLogInPeriod">查詢</button>
+              <div class="form-group row">
+                <div class="mr-2 col-2"></div>
+                <div class="col-9">
+                  <button
+                    class="btn btn-primary"
+                    @click.stop.prevent="filterPointLogInPeriod"
+                  >查詢</button>
+                </div>
               </div>
-            </div>
-           </form>
+            </form>
           </div>
         </div>
       </div>
@@ -75,12 +94,24 @@
                   </tr>
                 </thead>
                 <tbody>
-                  <tr>
-                    <th scope="row"></th>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
+                  <tr
+                    v-for="loginLog in userLoginLogPeriod"
+                    :key="loginLog.id"
+                  >
+                    <th scope="row">{{ loginLog.id }}</th>
+                    <td>
+                      <div v-if="loginLog.createdAt">
+                        <div>
+                          {{ formatDate(loginLog.createdAt) }}
+                        </div>
+                        <div>
+                          {{ formatTime(loginLog.createdAt) }}
+                        </div>
+                      </div>
+                    </td>
+                    <td>{{ loginLog.ip }}</td>
+                    <td>{{ loginLog.device }}</td>
+                    <td>{{ loginLog.isSuccess ? '成功' : '失敗' }}</td>
                   </tr>
                 </tbody>
               </table>
@@ -93,13 +124,16 @@
 </template>
 
 <script setup>
-import { reactive } from 'vue'
-defineProps({
-  userPointLogInPeriod: {
+import { formatDate, formatTime } from '@utils/formatDateTime'
+import { onMounted, reactive } from 'vue'
+
+const props = defineProps({
+  userLoginLogPeriod: {
     type: Array,
     default: () => []
   }
 })
+console.log('userLoginLogPeriod', props.userLoginLogPeriod)
 const emit = defineEmits(['filterLogInInPeriod'])
 
 const filterDetail = reactive({
@@ -108,6 +142,10 @@ const filterDetail = reactive({
 })
 
 const filterPointLogInPeriod = () => {
-  emit('filterLogInInPeriod', {...filterDetail})
+  emit('filterLogInInPeriod', { ...filterDetail })
 }
+
+onMounted(() => {
+  filterPointLogInPeriod()
+})
 </script>

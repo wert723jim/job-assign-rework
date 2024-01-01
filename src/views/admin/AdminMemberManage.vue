@@ -158,7 +158,7 @@
                   </div>
                 </td>
                 <td>
-
+                  {{ member.login_logs[0].ip }}
                 </td>
                 <td>
                   {{ member.note }}
@@ -220,7 +220,13 @@ const queryString = qs.stringify({
     group: {
       fields: ['name']
     },
-    login_logs: true
+    login_logs: {
+      sort: {
+        createdAt: 'desc'
+      },
+      limit: 1,
+      fields: ['ip']
+    },
   },
   sort: ['id'],
   filters: {
