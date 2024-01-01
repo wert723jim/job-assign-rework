@@ -44,7 +44,6 @@
           </div>
           <div class="mt-auto ml-auto text-sm text-gray-400">
             交易日期 {{ formatDate(log.attributes.createdAt) }}
-            交易日期 {{ formatTime(log.attributes.createdAt) }}
           </div>
         </div>
       </div>
@@ -58,7 +57,7 @@
 
 <script setup>
 import fetchWithToken from '@utils/fetchFn'
-import { formatDate, formatTime } from '@utils/formatDateTime'
+import { formatDate } from '@utils/formatDateTime'
 
 const main_point = ref(0)
 const pointLogList = ref([])
