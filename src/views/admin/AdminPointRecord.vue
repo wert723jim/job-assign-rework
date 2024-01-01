@@ -306,7 +306,7 @@ const fetchMembers = async () => {
     queryString += '&filters[$and][4][edit_point][$lt]=0'
   }
 
-  const { data } = await fetchWithToken(`/api/point-logs?populate[0]=user&populate[1]=user.group${queryString}&filters[user][isAdmin]=false`)
+  const { data } = await fetchWithToken(`/api/point-logs?populate[0]=user&populate[1]=user.group${queryString}&filters[user][isAdmin]=false&sort[createdAt]=desc`)
   pointLogs.value = data.map((item) => ({
     id: item.id,
     username: item.attributes.user.data?.attributes.username || '查無此人',

@@ -158,7 +158,7 @@
                   </div>
                 </td>
                 <td>
-                  {{ member.login_logs[0].ip }}
+                  {{ member?.login_logs?.[0]?.ip }}
                 </td>
                 <td>
                   {{ member.note }}
@@ -189,6 +189,8 @@ import getFilterQuery from '@utils/getFilterQuery'
 import fetchWithToken, { fetchWithoutToken } from '@utils/fetchFn'
 import { formatDate, formatTime } from '@utils/formatDateTime'
 import qs from 'qs'
+import { useToast } from 'vue-toast-notification'
+const $toast = useToast()
 
 const members = ref([])
 const groupOptions = ref([])
@@ -228,7 +230,9 @@ const queryString = qs.stringify({
       fields: ['ip']
     },
   },
-  sort: ['id'],
+  sort: {
+    createdAt: 'desc'
+  },
   filters: {
     isAdmin: false
   }
@@ -257,8 +261,16 @@ const createMember = async (formDetail) => {
   }
 
   const data = await fetchWithoutToken('/api/auth/local/register', 'POST', postBody)
-  if (!data.data) {
-    console.log('create member error')
+  if (data.error && data.error.message === 'Email or Username are already taken') {
+    $toast.error('員工帳號已重複', {
+      class: 'toast-default'
+    })
+    return
+  }
+  if (data.error && data.error.message === 'This attribute must be unique') {
+    $toast.error('員工姓名已重複', {
+      class: 'toast-default'
+    })
     return
   }
 
@@ -278,6 +290,9 @@ const createMember = async (formDetail) => {
   })
 
   createMemberModal.value.modalClose()
+  $toast.success('新增帳號成功', {
+    class: 'toast-default'
+  })
 }
 
 const filterMembers = () => {

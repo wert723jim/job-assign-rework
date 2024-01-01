@@ -27,12 +27,19 @@
 <script setup>
 import CustomButton from '@/components/CustomButton.vue'
 import { inject } from 'vue'
+import { useRouter } from 'vue-router'
 const connectCustomService = inject('connectCustomService')
 
 const props = defineProps(['product'])
 
 const imageUrl = props.product.attributes.image.data?.attributes.url
+const router = useRouter()
 const handleClick = () => {
+  const token = localStorage.getItem('token')
+  if (!token) {
+    router.replace('/login')
+    return
+  }
   if (props.product.attributes.url) {
     window.open(props.product.attributes.url)
     return

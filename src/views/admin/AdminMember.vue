@@ -173,7 +173,7 @@ const filterPointLogInPeriod = async (formDetail) => {
     queryString += '&filters[$and][2][edit_point][$lt]=0'
   }
   // &filters[edit_point][$lt|$gt]=0
-  const { data } = await fetchWithToken(`/api/point-logs?${queryString}`)
+  const { data } = await fetchWithToken(`/api/point-logs?${queryString}&sort[createdAt]=desc`)
   userPointLogInPeriod.value = data.map((item) => ({
     id: item.id,
     ...item.attributes,

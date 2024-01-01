@@ -119,7 +119,7 @@ const chosenProduct = reactive({
 })
 
 const fetchProducts = async () => {
-  const { data } = await fetchWithToken('/api/products?populate[image][fields]=url')
+  const { data } = await fetchWithToken('/api/products?populate[image][fields]=url&sort[createdAt]=desc')
   products.value = data.map((item) => ({
     id: item.id,
     ...item.attributes,

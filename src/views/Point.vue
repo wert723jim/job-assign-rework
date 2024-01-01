@@ -44,6 +44,7 @@
           </div>
           <div class="mt-auto ml-auto text-sm text-gray-400">
             交易日期 {{ formatDate(log.attributes.createdAt) }}
+            交易日期 {{ formatTime(log.attributes.createdAt) }}
           </div>
         </div>
       </div>
@@ -57,14 +58,14 @@
 
 <script setup>
 import fetchWithToken from '@utils/fetchFn'
-import { formatDate } from '@utils/formatDateTime'
+import { formatDate, formatTime } from '@utils/formatDateTime'
 
 const main_point = ref(0)
 const pointLogList = ref([])
 onMounted(async () => {
   const user = await fetchWithToken('/api/users/me?fields[0]=main_point&fields[1]=id')
   main_point.value = user.main_point
-  const pointLogs = await fetchWithToken(`/api/point-logs?populate[0]=user&filters[user][id][$eq]=${user.id}`)
+  const pointLogs = await fetchWithToken(`/api/point-logs?populate[0]=user&filters[user][id][$eq]=${user.id}&sort[createdAt]=desc`)
   pointLogList.value = pointLogs.data
 })
 

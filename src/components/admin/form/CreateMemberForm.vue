@@ -2,23 +2,23 @@
   <div>
     <form @submit.stop.prevent="confirmForm">
       <div class="form-group">
-        <label for="username">員工帳號: </label>
+        <label for="username">員工帳號:<span class="text-red-400 ">*</span></label>
         <input v-model="formDetail.username" type="text" class="form-control" id="username">
       </div>
       <div class="form-group">
-        <label for="password">登入密碼: </label>
-        <input v-model="formDetail.password" type="text" class="form-control" id="password">
+        <label for="password">登入密碼:<span class="text-red-400 ">*</span> </label>
+        <input v-model="formDetail.password" type="password" class="form-control" id="password">
       </div>
       <div class="form-group">
-        <label for="nickname">員工姓名: </label>
+        <label for="nickname">員工姓名:<span class="text-red-400 ">*</span> </label>
         <input v-model="formDetail.nickname" type="text" class="form-control" id="nickname">
       </div>
       <div class="form-group">
-        <label for="phone">電話: </label>
+        <label for="phone">電話:<span class="text-red-400 ">*</span> </label>
         <input v-model="formDetail.phone" type="text" class="form-control" id="phone">
       </div>
       <div class="form-group">
-        <label for="group">員工群組: </label>
+        <label for="group">員工群組:<span class="text-red-400 ">*</span>  </label>
         <select v-model="formDetail.group" name="group" id="group">
           <option value="0" disabled>無</option>
           <option v-for="group in groupOptions" :key="group.id" :value="group.id">
@@ -40,7 +40,10 @@
 </template>
 
 <script setup>
+import { useToast } from 'vue-toast-notification'
 import { reactive } from 'vue'
+const $toast = useToast()
+
 defineProps({
   groupOptions: {
     type: Array,
@@ -64,6 +67,9 @@ const confirmForm = () => {
   const { username, password, phone, group } = formDetail
   if (!username || !password || !phone || !group) {
     console.log('欄位不得為空')
+    $toast.error('必填欄位不得為空', {
+      class: 'toast-default'
+    })
     return
   }
   emit('confirmForm', {...formDetail})

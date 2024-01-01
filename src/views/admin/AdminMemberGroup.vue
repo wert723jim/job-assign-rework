@@ -93,7 +93,7 @@ const chosenGroupDetail = reactive({
 })
 
 const fetchMemberGroup = async () => {
-  const { data, error } = await fetchWithToken('/api/groups?fields[0]=name&fields[1]=isDefault&fields[2]=point_baseline&populate[users][count]=1')
+  const { data, error } = await fetchWithToken('/api/groups?fields[0]=name&fields[1]=isDefault&fields[2]=point_baseline&populate[users][count]=1&sort[createdAt]=desc')
 
   if (error) console.log(error)
 
