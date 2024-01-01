@@ -189,6 +189,9 @@ const queryString = qs.stringify({
     login_logs: true
   },
   sort: ['id'],
+  filters: {
+    isAdmin: false
+  }
   // start: 2,
   // limit: 2
 })
@@ -218,18 +221,22 @@ const chooseMember = (member) => {
 }
 
 const manipulateMainPoint = async (formDetail) => {
+  const balance = chosenMember.main_point + formDetail.edit_point
   const postBody = {
     data: {
       user: chosenMember.id,
       ...formDetail,
+      balance
     }
   }
-  const data = await fetchWithToken('/api/point-logs', 'POST', postBody)
+  await fetchWithToken('/api/point-logs', 'POST', postBody)
+  const data = await fetchWithToken(`/api/users/${chosenMember.id}`, 'PUT', { main_point: balance })
+  console.log(data)
   $toast.success('加扣點成功', {
     class: 'toast-default'
   })
   MainPointManipulateModal.value.modalClose()
-  console.log(data)
+  fetchMembers()
 }
 
 onMounted(() => {

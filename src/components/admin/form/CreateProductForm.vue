@@ -21,16 +21,6 @@
         </select>
       </div>
       <div class="form-group">
-        <label for="productIsOpen">訂單狀態: </label>
-        <select
-          id="productIsOpen"
-          v-model="formDetail.isOpen"
-        >
-          <option :value="true">啟用</option>
-          <option :value="false">停用</option>
-        </select>
-      </div>
-      <div class="form-group">
         <label for="productUrl">訂單連結: </label>
         <input
           type="text"
@@ -86,7 +76,6 @@ const props = defineProps({
     default: () => ({
       name: '',
       isDisplay: true,
-      isOpen: true,
       url: '',
       files: [],
     })
@@ -104,7 +93,6 @@ onMounted(() => {
 const formDetail = reactive({
   name: '',
   isDisplay: true,
-  isOpen: true,
   url: '',
   files: [],
 })

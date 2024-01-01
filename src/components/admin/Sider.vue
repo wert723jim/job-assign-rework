@@ -4,7 +4,11 @@
       <h4>管理後台</h4>
     </div>
     <ul class="menu">
-      <SiderList v-for="item in menu" :key="item.name" :menuItem="item"></SiderList>
+      <SiderList
+        v-for="item in menu"
+        :key="item.name"
+        :menuItem="item"
+      ></SiderList>
     </ul>
   </nav>
 </template>
@@ -22,11 +26,11 @@ const menu = ref([
         name: '員工管理',
         routerName: 'AdminMemberManage',
       }, {
-          name: '員工群組',
-          routerName: 'AdminMemberGroup',
+        name: '員工群組',
+        routerName: 'AdminMemberGroup',
       }, {
-          name: '點數管理',
-          routerName: 'AdminPointManage',
+        name: '點數管理',
+        routerName: 'AdminPointManage',
       },
     ]
   },
@@ -54,7 +58,3 @@ const menu = ref([
   }
 ])
 </script>
-
-<style scoped>
-
-</style>

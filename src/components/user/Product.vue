@@ -1,13 +1,13 @@
 <template>
   <div
-    class="w-max-[300px] h-max-[300px] rounded-lg overflow-hidden flex justify-center items-end cursor-pointer"
+    class="w-max-[300px] h-max-[300px] aspect-square rounded-lg overflow-hidden flex justify-center items-end cursor-pointer"
     @click="handleClick"
   >
     <img
       v-if="imageUrl"
       :src="imageUrl"
       alt="product img"
-      class="object-contain w-[300px] h-[300px]"
+      class="object-cover w-full h-full"
     >
     <img
       v-else

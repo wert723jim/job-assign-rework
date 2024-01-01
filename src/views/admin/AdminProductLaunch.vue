@@ -44,7 +44,6 @@
                 <th scope="col">商品名稱</th>
                 <th scope="col">創建日期</th>
                 <th scope="col">發布狀態</th>
-                <th scope="col">訂單狀態</th>
                 <th scope="col">功能</th>
               </tr>
             </thead>
@@ -80,23 +79,13 @@
                   >隱藏</span>
                 </td>
                 <td>
-                  <span
-                    class="badge-success badge-pill rounded-lg"
-                    v-if="product.isOpen"
-                  >啟用</span>
-                  <span
-                    class="badge-danger badge-pill rounded-lg"
-                    v-else
-                  >停用</span>
-                </td>
-                <td>
                   <button
                     class="btn btn-primary mr-1"
                     @click="chooseProduct(product)"
                   >修改</button>
                   <button
                     class="btn btn-danger"
-                    @click="removeProduct(product.id)"
+                    @click="removeProduct(product.id, product.image.data.id)"
                   >刪除</button>
                 </td>
               </tr>
@@ -125,14 +114,12 @@ const chosenProduct = reactive({
   id: 0,
   name: '',
   isDisplay: false,
-  isOpen: false,
   url: '',
   image: ''
 })
 
 const fetchProducts = async () => {
   const { data } = await fetchWithToken('/api/products?populate[image][fields]=url')
-  console.log(data)
   products.value = data.map((item) => ({
     id: item.id,
     ...item.attributes,
@@ -140,13 +127,12 @@ const fetchProducts = async () => {
 }
 
 const chooseProduct = (product) => {
-  const { id, name, isDisplay, isOpen, url, image } = product
+  const { id, name, isDisplay, url, image } = product
   console.log(product)
   Object.assign(chosenProduct, {
     id,
     name,
     isDisplay,
-    isOpen,
     url,
     image: image.data.attributes.url,
   })
@@ -257,7 +243,7 @@ const editProduct = async (formDetail) => {
   await fetchProducts()
 }
 
-const removeProduct = async (productId) => {
+const removeProduct = async (productId, imageId) => {
   if (!confirm('確定要刪除此商品?')) return
   const { data } = await fetchWithToken(`/api/products/${productId}`, 'DELETE')
   if (!data) {
@@ -265,6 +251,7 @@ const removeProduct = async (productId) => {
     return
   }
   products.value = products.value.filter((product) => product.id !== productId)
+  await fetchWithToken(`/api/upload/files/${imageId}`, 'DELETE')
 }
 
 fetchProducts()

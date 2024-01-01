@@ -5,8 +5,9 @@
     </template>
     <template v-slot:modalBody>
       <CreateMemberForm
-      @confirmForm="createMember"
-      :group-options="groupOptions">
+        @confirmForm="createMember"
+        :group-options="groupOptions"
+      >
       </CreateMemberForm>
     </template>
   </Modal>
@@ -15,34 +16,59 @@
       <div class="main">
         <div class="search">
           <div>
-            <form class="float-left text-dark" @submit.prevent.stop="filterMembers">
+            <form
+              class="float-left text-dark"
+              @submit.prevent.stop="filterMembers"
+            >
               <div class="form-group">
                 <label for="infoKeyWords">帳號/姓名/電話</label>
-                <input v-model="filterDetail.info" type="text" class="form-control" id="infoKeyWords">
+                <input
+                  v-model="filterDetail.info"
+                  type="text"
+                  class="form-control"
+                  id="infoKeyWords"
+                >
               </div>
-              
+
               <div class="form-group">
                 <label for="memberGroup">員工群組</label>
-                <select id="memberGroup" v-model="filterDetail.group">
+                <select
+                  id="memberGroup"
+                  v-model="filterDetail.group"
+                >
                   <option value="0">全部</option>
-                  <option v-for="option in groupOptions" :key="option.id" :value="option.id">{{ option.name }}</option>
+                  <option
+                    v-for="option in groupOptions"
+                    :key="option.id"
+                    :value="option.id"
+                  >{{ option.name }}</option>
                 </select>
               </div>
 
               <div class="form-group">
                 <label for="memberState">員工狀態</label>
-                <select id="memberState" v-model="filterDetail.isActive">
+                <select
+                  id="memberState"
+                  v-model="filterDetail.isActive"
+                >
                   <option value="">全部</option>
                   <option value="true">啟用</option>
                   <option value="false">停用</option>
                 </select>
               </div>
 
-              <button type="submit" class="btn btn-primary">查詢</button>
+              <button
+                type="submit"
+                class="btn btn-primary"
+              >查詢</button>
             </form>
           </div>
           <!-- Button trigger modal -->
-          <button type="button" class="btn btn-primary float-right mr-1" @click.prevent="createMemberModal.modalOpen()">
+          <button
+            type="button"
+            class="btn btn-primary float-right mr-1"
+            @click.prevent="createMemberModal.modalOpen()"
+          >
             <i class="iconfont">&#xe665;</i>新增
           </button>
         </div>
@@ -94,7 +120,10 @@
               </tr>
             </thead>
             <tbody>
-              <tr v-for="member in members" :key="member.id">
+              <tr
+                v-for="member in members"
+                :key="member.id"
+              >
                 <th scope="row">
                   {{ member.id }}
                 </th>
@@ -126,21 +155,24 @@
                     <div>
                       {{ formatTime(member.createdAt) }}
                     </div>
-                  </div> 
+                  </div>
                 </td>
                 <td>
-                  
+
                 </td>
                 <td>
                   {{ member.note }}
                 </td>
                 <td class="flex gap-2">
-                  <router-link :to="{name: 'AdminMember', params: {memberId: member.id}}" class="btn btn-primary" >
+                  <router-link
+                    :to="{ name: 'AdminMember', params: { memberId: member.id } }"
+                    class="btn btn-primary"
+                  >
                     修改
                   </router-link>
                 </td>
               </tr>
-              </tbody>
+            </tbody>
           </table>
         </div>
       </div>
@@ -154,7 +186,7 @@ import Modal from '../../components/admin/Modal.vue'
 import CreateMemberForm from '../../components/admin/form/CreateMemberForm.vue'
 import { ref, reactive } from 'vue'
 import getFilterQuery from '@utils/getFilterQuery'
-import  fetchWithToken, { fetchWithoutToken } from '@utils/fetchFn'
+import fetchWithToken, { fetchWithoutToken } from '@utils/fetchFn'
 import { formatDate, formatTime } from '@utils/formatDateTime'
 import qs from 'qs'
 
@@ -191,6 +223,9 @@ const queryString = qs.stringify({
     login_logs: true
   },
   sort: ['id'],
+  filters: {
+    isAdmin: false
+  }
   // start: 2,
   // limit: 2
 })
