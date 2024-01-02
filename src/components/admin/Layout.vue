@@ -21,9 +21,9 @@ import Header from './Header.vue'
 </script>
 
 <style>
-@import "@/static/admin/css/main.css";
-@import "@/static/admin/css/index.css";
-@import "@/static/bootstrap/css/bootstrap.min.css";
+@import '@/static/admin/css/main.css';
+@import '@/static/admin/css/index.css';
+@import '@/static/bootstrap/css/bootstrap.min.css';
 
 .content-wrapper {
   position: absolute;
@@ -31,13 +31,14 @@ import Header from './Header.vue'
   top: 0px;
   right: 0px;
   width: 100%;
-  height: 100%;
+  height: auto;
   border: 0;
   padding-top: 60px;
 }
 
 .main {
   position: relative;
+  height: auto;
   flex: 1;
   padding: 0;
 }

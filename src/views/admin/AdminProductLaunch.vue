@@ -5,7 +5,9 @@
     </template>
     <template v-slot:modalBody>
       <CreateProductForm
-        @confirmForm="createProduct">
+        @confirmForm="createProduct"
+        :isSubmitBtnLoading="isSubmitBtnLoading"
+      >
       </CreateProductForm>
     </template>
   </Modal>
@@ -16,7 +18,9 @@
     <template v-slot:modalBody>
       <CreateProductForm
         :product-info="chosenProduct"
-        @confirmForm="editProduct">
+        :isSubmitBtnLoading="isSubmitBtnLoading"
+        @confirmForm="editProduct"
+      >
       </CreateProductForm>
     </template>
   </Modal>
@@ -24,7 +28,11 @@
     <template v-slot:content>
       <div class="main">
         <div class="search">
-          <button type="button" class="btn btn-primary float-left mr-1" @click.prevent="creatProductModal.modalOpen()">
+          <button
+            type="button"
+            class="btn btn-primary float-left mr-1"
+            @click.prevent="creatProductModal.modalOpen()"
+          >
             <i class="iconfont">&#xe665;</i>新增
           </button>
         </div>
@@ -36,12 +44,14 @@
                 <th scope="col">商品名稱</th>
                 <th scope="col">創建日期</th>
                 <th scope="col">發布狀態</th>
-                <th scope="col">訂單狀態</th>
                 <th scope="col">功能</th>
               </tr>
             </thead>
             <tbody>
-              <tr v-for="product in products" :key="product.id">
+              <tr
+                v-for="product in products"
+                :key="product.id"
+              >
                 <th scope="row">
                   {{ product.id }}
                 </th>
@@ -49,22 +59,37 @@
                   {{ product.name }}
                 </td>
                 <td>
-                  {{ product.createdAt }}
+                  <div v-if="product.createdAt">
+                    <div>
+                      {{ formatDate(product.createdAt) }}
+                    </div>
+                    <div>
+                      {{ formatTime(product.createdAt) }}
+                    </div>
+                  </div>
                 </td>
                 <td>
-                  <span class="badge-success badge-pill rounded-lg" v-if="product.isDisplay">顯示</span>
-                  <span class="badge-danger badge-pill rounded-lg" v-else>隱藏</span>
+                  <span
+                    class="badge-success badge-pill rounded-lg"
+                    v-if="product.isDisplay"
+                  >顯示</span>
+                  <span
+                    class="badge-danger badge-pill rounded-lg"
+                    v-else
+                  >隱藏</span>
                 </td>
                 <td>
-                  <span class="badge-success badge-pill rounded-lg" v-if="product.isOpen">啟用</span>
-                  <span class="badge-danger badge-pill rounded-lg" v-else>停用</span>
-                </td>
-                <td>
-                  <button  class="btn btn-primary mr-1" @click="chooseProduct(product)">修改</button>
-                  <button class="btn btn-danger" @click="removeProduct(product.id)">刪除</button>
+                  <button
+                    class="btn btn-primary mr-1"
+                    @click="chooseProduct(product)"
+                  >修改</button>
+                  <button
+                    class="btn btn-danger"
+                    @click="removeProduct(product.id, product.image.data.id)"
+                  >刪除</button>
                 </td>
               </tr>
-              </tbody>
+            </tbody>
           </table>
         </div>
       </div>
@@ -78,6 +103,9 @@ import Layout from '../../components/admin/Layout.vue'
 import Modal from '../../components/admin/Modal.vue'
 import CreateProductForm from '../../components/admin/form/CreateProductForm.vue'
 import fetchWithToken, { fetchUploadFileWithToken } from '@utils/fetchFn.js'
+import { formatDate, formatTime } from '@utils/formatDateTime'
+import { useToast } from 'vue-toast-notification'
+const $toast = useToast()
 
 const products = ref([])
 const creatProductModal = ref(null)
@@ -86,13 +114,12 @@ const chosenProduct = reactive({
   id: 0,
   name: '',
   isDisplay: false,
-  isOpen: false,
   url: '',
   image: ''
 })
 
 const fetchProducts = async () => {
-  const { data } = await fetchWithToken('/api/products')
+  const { data } = await fetchWithToken('/api/products?populate[image][fields]=url&sort[createdAt]=desc')
   products.value = data.map((item) => ({
     id: item.id,
     ...item.attributes,
@@ -100,19 +127,29 @@ const fetchProducts = async () => {
 }
 
 const chooseProduct = (product) => {
-  const { id, name, isDisplay, isOpen, url, image } = product
+  const { id, name, isDisplay, url, image } = product
+  console.log(product)
   Object.assign(chosenProduct, {
     id,
     name,
     isDisplay,
-    isOpen,
     url,
-    image,
+    image: image.data.attributes.url,
   })
   editProductModal.value.modalOpen()
 }
 
+const isSubmitBtnLoading = ref(false)
 const createProduct = async (formDetail) => {
+  if (formDetail.files.length === 0) {
+    console.log('請上傳圖片')
+    $toast.error('請上傳圖片')
+    return
+  }
+  isSubmitBtnLoading.value = true
+  $toast.info('商品上傳中...', {
+    class: 'toast-default'
+  })
   const formData = new FormData()
   formData.append('files', formDetail.files[0])
 
@@ -120,6 +157,7 @@ const createProduct = async (formDetail) => {
 
   console.log(formDetail)
   console.log(file)
+
 
   if (!file) {
     console.log('image upload error')
@@ -138,6 +176,7 @@ const createProduct = async (formDetail) => {
   const { data } = await fetchWithToken('/api/products', 'POST', postBody)
   if (!data) {
     console.log('create product error')
+    isSubmitBtnLoading.value = false
     return
   }
 
@@ -147,14 +186,23 @@ const createProduct = async (formDetail) => {
   })
 
   creatProductModal.value.modalClose()
+  $toast.success('新增商品成功', {
+    class: 'toast-default'
+  })
+  isSubmitBtnLoading.value = false
+  await fetchProducts()
 }
 
 const editProduct = async (formDetail) => {
+  isSubmitBtnLoading.value = true
+  $toast.info('商品修改中...', {
+    class: 'toast-default'
+  })
   const formData = new FormData()
   formData.append('files', formDetail.files[0])
 
   const file = await fetchUploadFileWithToken('/api/upload', formData)
-  
+
   console.log(formDetail)
   console.log(file)
 
@@ -164,10 +212,11 @@ const editProduct = async (formDetail) => {
   }
 
   delete formDetail['files']
+
   const putBody = {
     data: {
       ...formDetail,
-      image: file[0].id
+      image: file[0]?.id || chooseProduct.image
     },
   }
   const { data } = await fetchWithToken(`/api/products/${chosenProduct.id}`, 'PUT', putBody)
@@ -177,7 +226,7 @@ const editProduct = async (formDetail) => {
   }
 
   products.value = products.value.map((product) => {
-    if(product.id === data.id) {
+    if (product.id === data.id) {
       return {
         id: data.id,
         ...data.attributes,
@@ -187,9 +236,14 @@ const editProduct = async (formDetail) => {
   })
 
   editProductModal.value.modalClose()
+  $toast.success('修改商品成功', {
+    class: 'toast-default'
+  })
+  isSubmitBtnLoading.value = false
+  await fetchProducts()
 }
 
-const removeProduct = async (productId) => {
+const removeProduct = async (productId, imageId) => {
   if (!confirm('確定要刪除此商品?')) return
   const { data } = await fetchWithToken(`/api/products/${productId}`, 'DELETE')
   if (!data) {
@@ -197,6 +251,7 @@ const removeProduct = async (productId) => {
     return
   }
   products.value = products.value.filter((product) => product.id !== productId)
+  await fetchWithToken(`/api/upload/files/${imageId}`, 'DELETE')
 }
 
 fetchProducts()

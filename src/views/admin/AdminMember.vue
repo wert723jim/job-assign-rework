@@ -7,17 +7,45 @@
         </div>
         <div class="pt-3">
           <ul class="nav nav-tabs">
-            <li class="nav-item" @click.prevent.stop="chooseTab('accountInfo')">
-              <a class="nav-link" :class="{active: chosenTab === 'accountInfo'}" href="#">帳號資料</a>
+            <li
+              class="nav-item"
+              @click.prevent.stop="chooseTab('accountInfo')"
+            >
+              <a
+                class="nav-link"
+                :class="{ active: chosenTab === 'accountInfo' }"
+                href="#"
+              >帳號資料</a>
             </li>
-            <li class="nav-item" @click.prevent.stop="chooseTab('bankAccount')">
-              <a class="nav-link" :class="{active: chosenTab === 'bankAccount'}" href="#">銀行帳號</a>
+            <li
+              class="nav-item"
+              @click.prevent.stop="chooseTab('bankAccount')"
+            >
+              <a
+                class="nav-link"
+                :class="{ active: chosenTab === 'bankAccount' }"
+                href="#"
+              >銀行帳號</a>
             </li>
-            <li class="nav-item"  @click.prevent.stop="chooseTab('pointRecord')">
-              <a class="nav-link" :class="{active: chosenTab === 'pointRecord'}" href="#">點數紀錄</a>
+            <li
+              class="nav-item"
+              @click.prevent.stop="chooseTab('pointRecord')"
+            >
+              <a
+                class="nav-link"
+                :class="{ active: chosenTab === 'pointRecord' }"
+                href="#"
+              >點數紀錄</a>
             </li>
-            <li class="nav-item" @click.prevent.stop="chooseTab('logInRecord')">
-              <a class="nav-link" :class="{active: chosenTab === 'logInRecord'}" href="#">登入紀錄</a>
+            <li
+              class="nav-item"
+              @click.prevent.stop="chooseTab('logInRecord')"
+            >
+              <a
+                class="nav-link"
+                :class="{ active: chosenTab === 'logInRecord' }"
+                href="#"
+              >登入紀錄</a>
             </li>
           </ul>
           <UserInfo
@@ -26,7 +54,8 @@
             :group-options="groupOptions"
             @editMember="editMember"
             @resetPassword="resetPassword"
-            v-show="chosenTab === 'accountInfo'">            
+            v-show="chosenTab === 'accountInfo'"
+          >
           </UserInfo>
           <Bank
             :bank-list="bankList"
@@ -35,21 +64,25 @@
             @removeBank="removeBank"
             @addCryptoAddress="addCryptoAddress"
             @removeCryptoAddress="removeCryptoAddress"
-            v-show="chosenTab === 'bankAccount'">
+            v-show="chosenTab === 'bankAccount'"
+          >
           </Bank>
           <PointRecord
             :user-point-log-in-period="userPointLogInPeriod"
             @filterPointLogInPeriod="filterPointLogInPeriod"
-            v-show="chosenTab === 'pointRecord'">
+            v-show="chosenTab === 'pointRecord'"
+          >
           </PointRecord>
           <LogInRecord
             @filterLogInInPeriod="filterLogInInPeriod"
-            v-show="chosenTab === 'logInRecord'">  
+            :userLoginLogPeriod="userLoginLogPeriod"
+            v-show="chosenTab === 'logInRecord'"
+          >
           </LogInRecord>
-      </div>
+        </div>
       </div>
     </template>
-    
+
   </Layout>
 </template>
 
@@ -140,15 +173,15 @@ const filterPointLogInPeriod = async (formDetail) => {
     queryString += '&filters[$and][2][edit_point][$lt]=0'
   }
   // &filters[edit_point][$lt|$gt]=0
-  const { data } = await fetchWithToken(`/api/point-logs?${queryString}`)
+  const { data } = await fetchWithToken(`/api/point-logs?${queryString}&sort[createdAt]=desc`)
   userPointLogInPeriod.value = data.map((item) => ({
     id: item.id,
     ...item.attributes,
   }))
 }
 
+const userLoginLogPeriod = ref([])
 const filterLogInInPeriod = async (formDetail) => {
-  console.log(formDetail)
   let queryString = `filters[users]=${route.params.memberId}`
   if (formDetail.startDate) {
     queryString += `&filters[$and][0][createdAt][$gt]=${formDetail.startDate}`
@@ -158,8 +191,11 @@ const filterLogInInPeriod = async (formDetail) => {
     queryString += `&filters[$and][1][createdAt][$lt]=${formDetail.endDate}`
   }
   // &filters[edit_point][$lt|$gt]=0
-  const { data } = await fetchWithToken(`/api/login-logs?${queryString}`)
-  console.log(data)
+  const { data } = await fetchWithToken(`/api/login-logs?${queryString}&sort[createdAt]=desc`)
+  userLoginLogPeriod.value = data.map((item) => ({
+    id: item.id,
+    ...item.attributes,
+  }))
 }
 
 const editMember = async (userInfoDetail) => {
@@ -179,10 +215,10 @@ const editMember = async (userInfoDetail) => {
 const resetPassword = async (newPassword) => {
   const putBody = {
     password: newPassword
-  } 
+  }
   const data = await fetchWithToken(`/api/users/${route.params.memberId}`, 'PUT', putBody)
-  
-  if( !data.data ) {
+
+  if (!data.data) {
     console.log('reset password error')
     return
   }
@@ -197,7 +233,7 @@ const addBank = async (bankDetail) => {
   }
   const { data } = await fetchWithToken('/api/banks', 'POST', postBody)
 
-  if( !data ) {
+  if (!data) {
     console.log('add bank error')
     return
   }

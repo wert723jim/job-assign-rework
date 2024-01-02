@@ -34,6 +34,7 @@
     ></div>
     <div
       :class="navClass"
+      v-if="!isLogin"
       @click="connectCustomService"
     >業主專區</div>
     <div

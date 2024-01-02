@@ -33,9 +33,8 @@ const routes = [
   },
   {
     path: '/admin',
-    redirect: {
-      name: 'AdminMemberGroup',
-    },
+    name: 'admin login',
+    component: () => import('../views/admin/Login.vue')
   },
   {
     path: '/admin/memberGroup',

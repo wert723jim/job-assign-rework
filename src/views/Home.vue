@@ -6,7 +6,7 @@
       </div>
       <UserMarquee />
     </div>
-    <div class="grid md:grid-cols-4 grid-cols-2 gap-8 md:mt-[64px]">
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-8 md:mt-[64px]">
       <UserProduct
         v-for="product in productList"
         :key="product.id"
@@ -16,7 +16,7 @@
     <div
       v-if="productList === null || productList.length === 0"
       class="text-gray-400 text-center"
-    >沒有商品 {{ productList?.length }}</div>
+    >沒有商品</div>
   </UserLayout>
 </template>
 

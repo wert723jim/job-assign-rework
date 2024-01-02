@@ -91,7 +91,7 @@ const chosenAnnouncement = reactive({
 })
 
 const fetchannouncements = async () => {
-  const { data } = await fetchWithToken('/api/announcements')
+  const { data } = await fetchWithToken('/api/announcements?sort[createdAt]=desc')
   announcements.value = data.map((item) => ({
     id: item.id,
     ...item.attributes,

@@ -5,8 +5,9 @@
     </template>
     <template v-slot:modalBody>
       <MainPointManipulateForm
-      :chosen-member="chosenMember"
-      @manipulateMainPoint="manipulateMainPoint">
+        :chosen-member="chosenMember"
+        @manipulateMainPoint="manipulateMainPoint"
+      >
       </MainPointManipulateForm>
     </template>
   </Modal>
@@ -15,21 +16,39 @@
       <div class="main">
         <div class="search">
           <div>
-            <form class="float-left text-dark" @submit.stop.prevent="fetchMembers">
+            <form
+              class="float-left text-dark"
+              @submit.stop.prevent="fetchMembers"
+            >
               <div class="form-group">
                 <label for="infoKeyWords">帳號/姓名</label>
-                <input type="text" class="form-control" id="infoKeyWords" v-model="filterDetail.info">
+                <input
+                  type="text"
+                  class="form-control"
+                  id="infoKeyWords"
+                  v-model="filterDetail.info"
+                >
               </div>
-              
+
               <div class="form-group">
                 <label for="memberGroup">員工群組</label>
-                <select id="memberGroup" v-model="filterDetail.group">
+                <select
+                  id="memberGroup"
+                  v-model="filterDetail.group"
+                >
                   <option value="null">全部</option>
-                  <option :value="group.id" v-for="group in groupOptions" :key="group.id">{{ group.name }}</option>
+                  <option
+                    :value="group.id"
+                    v-for="group in groupOptions"
+                    :key="group.id"
+                  >{{ group.name }}</option>
                 </select>
               </div>
 
-              <button type="submit" class="btn btn-primary">查詢</button>
+              <button
+                type="submit"
+                class="btn btn-primary"
+              >查詢</button>
             </form>
           </div>
         </div>
@@ -77,7 +96,10 @@
               </tr>
             </thead>
             <tbody>
-              <tr v-for="member in members" :key="member.id">
+              <tr
+                v-for="member in members"
+                :key="member.id"
+              >
                 <th scope="row">
                   {{ member.id }}
                 </th>
@@ -100,7 +122,7 @@
                   </div>
                 </td>
                 <td>
-                  {{ member.main_point}}
+                  {{ member.main_point }}
                 </td>
                 <td>
                   <div>
@@ -111,13 +133,16 @@
                   </div>
                 </td>
                 <td>
-                  
+
                 </td>
                 <td>
-                  <button class="btn btn-primary" @click.prevent="chooseMember(member)">加扣點</button>
+                  <button
+                    class="btn btn-primary"
+                    @click.prevent="chooseMember(member)"
+                  >加扣點</button>
                 </td>
               </tr>
-              </tbody>
+            </tbody>
           </table>
         </div>
       </div>
@@ -133,6 +158,8 @@ import MainPointManipulateForm from '../../components/admin/form/MainPointManipu
 import fetchWithToken from '@utils/fetchFn'
 import getFilterQuery from '@utils/getFilterQuery'
 import { formatDate, formatTime } from '@utils/formatDateTime'
+import { useToast } from 'vue-toast-notification'
+const $toast = useToast()
 import qs from 'qs'
 
 const groupOptions = ref([])
@@ -162,6 +189,9 @@ const queryString = qs.stringify({
     login_logs: true
   },
   sort: ['id'],
+  filters: {
+    isAdmin: false
+  }
   // start: 2,
   // limit: 2
 })
@@ -191,17 +221,26 @@ const chooseMember = (member) => {
 }
 
 const manipulateMainPoint = async (formDetail) => {
+  const balance = chosenMember.main_point + formDetail.edit_point
   const postBody = {
     data: {
       user: chosenMember.id,
       ...formDetail,
+      balance
     }
   }
-  const data = await fetchWithToken('/api/point-logs', 'POST', postBody)
+  await fetchWithToken('/api/point-logs', 'POST', postBody)
+  const data = await fetchWithToken(`/api/users/${chosenMember.id}`, 'PUT', { main_point: balance })
   console.log(data)
+  $toast.success('加扣點成功', {
+    class: 'toast-default'
+  })
+  MainPointManipulateModal.value.modalClose()
+  fetchMembers()
 }
 
 onMounted(() => {
   fetchGroupOptions()
+  fetchMembers()
 })
 </script>

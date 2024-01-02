@@ -13,3 +13,11 @@
     </div>
   </div>
 </template>
+
+<script setup>
+import removeAdminCss from '@utils/removeAdminCss'
+import { watchEffect } from 'vue'
+watchEffect(() => {
+  removeAdminCss()
+})
+</script>

@@ -64,7 +64,7 @@ const pointLogList = ref([])
 onMounted(async () => {
   const user = await fetchWithToken('/api/users/me?fields[0]=main_point&fields[1]=id')
   main_point.value = user.main_point
-  const pointLogs = await fetchWithToken(`/api/point-logs?populate[0]=user&filters[user][id][$eq]=${user.id}`)
+  const pointLogs = await fetchWithToken(`/api/point-logs?populate[0]=user&filters[user][id][$eq]=${user.id}&sort[createdAt]=desc`)
   pointLogList.value = pointLogs.data
 })
 

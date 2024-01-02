@@ -85,7 +85,7 @@
 </template>
 
 <script setup>
-import { fetchWithoutToken } from '@utils/fetchFn'
+import fetchWithToken, { fetchWithoutToken } from '@utils/fetchFn'
 
 const fieldGroupClass = 'flex flex-col mt-8 justify-center'
 const inputClass = 'border rounded-md w-[330px] outline-primary h-10 px-2 mt-2'
@@ -131,15 +131,33 @@ const handleSubmit = async () => {
   }
 
   if (data.user.isAdmin) {
-    localStorage.setItem('token', data.jwt)
-    router.replace('/admin')
+    error.returnError = '帳號或密碼錯誤'
     return
+    // localStorage.setItem('token', data.jwt)
+    // // router.replace('/admin')
+    // location.href = '/admin'
+    // return
   }
 
   if (data.user.id) {
     localStorage.setItem('token', data.jwt)
     router.replace('/')
+    createLoginLog(data.user.id)
   }
+}
+
+const createLoginLog = async (userId) => {
+  const response = await fetch('https://api.ipify.org?format=json')
+  const ipData = await response.json()
+  const data = await fetchWithToken('/api/login-logs', 'POST', {
+    data: {
+      ip: ipData.ip,
+      device: /Android|webOS|iPhone|iPod|BlackBerry/i.test(navigator.userAgent) ? 'mobile' : 'desktop',
+      isSuccess: true,
+      users: userId
+    }
+  })
+  console.log(data)
 }
 
 onMounted(() => {
@@ -150,7 +168,7 @@ onMounted(() => {
   generateCaptcha()
 })
 function generateCaptcha() {
-  const chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXTZabcdefghiklmnopqrstuvwxyz'
+  const chars = '0123456789'
   const string_length = 5
 
   let captchaCode = ''
